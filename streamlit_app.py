@@ -24,7 +24,7 @@ search_term = st.text_input('검색어를 입력하세요:')
 if st.button('검색'):
     if search_term:
         # 이름 열에서 검색어를 포함하는 행 찾기
-        result = df[df['이름'].str.contains(search_term, case=False)]
+        result = df[df['제목'].str.contains(search_term, case=False)]
         
         if not result.empty:
             st.write('검색 결과:')
