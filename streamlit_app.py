@@ -14,7 +14,7 @@ df_fin_file = pd.read_excel('df_list.xlsx', engine='openpyxl')
 
 # df_log 파일 처리
 if df_log_file is not None:
-    df_log = pd.read_excel(df_log_file)
+    df_log = df_log_file
     
     # unique_date가 Null이거나 1인 경우에 대한 필터링
     problematic_rows = df_log[df_log['unique_date'].isnull() | (df_log['unique_date'] == 1)]
@@ -33,7 +33,7 @@ if df_log_file is not None:
 
 # df_fin 파일 처리
 if df_fin_file is not None:
-    df_fin = pd.read_excel(df_fin_file)
+    df_fin = df_fin_file
 
     # 검색 기능 구현
     search_keyword = st.text_input("df_fin 파일에서 검색할 키워드를 입력하세요")
