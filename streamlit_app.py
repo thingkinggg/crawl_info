@@ -9,7 +9,7 @@ st.write(
 
 # 파일에서 데이터 읽기
 df_log_file = pd.read_excel('df_log.xlsx', engine='openpyxl')
-df_fin_file = pd.read_excel('df_fin.xlsx', engine='openpyxl')
+df_fin_file = pd.read_excel('df_list.xlsx', engine='openpyxl')
 
 
 # df_log 파일 처리
