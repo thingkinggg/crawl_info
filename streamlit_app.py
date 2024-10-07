@@ -37,10 +37,6 @@ def get_two_recent_files(file_prefix):
 
 # df_log 파일 읽기
 recent_file_path, previous_file_path = get_two_recent_files('df_log')
-
-if recent_files and len(recent_files) == 2:
-    # 가장 최근 파일과 그 이전 파일 읽기
-    recent_file, previous_file = recent_files
     
 # 최근 파일 처리
 if recent_file_path:
