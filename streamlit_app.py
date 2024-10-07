@@ -85,7 +85,7 @@ if recent_file_path and previous_file_path:
     merge_columns = ['URL', 'unique_date', 'max_date']  # 비교하고자 하는 컬럼들만 명시
     df_merged = pd.merge(df_log_recent, 
                          df_log_previous[merge_columns], 
-                         on='SITE_NO', 
+                         on='URL', 
                          suffixes=('_recent', '_previous'), 
                          how='left')
     
