@@ -32,7 +32,7 @@ def get_two_recent_files(file_prefix):
     if len(recent_files) >= 2:
         return sorted(recent_files, reverse=True)[:2]
     elif len(recent_files) == 1:
-        return recent_files, None
+        return recent_files[0], None
     return None, None
 
 # df_log 파일 읽기
