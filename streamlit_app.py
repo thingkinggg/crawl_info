@@ -59,13 +59,13 @@ if df_log_file_path:
     if not problematic_rows.empty:
         st.warning("unique_date가 Null이거나 1인 경우이며, max_date가 오늘인 데이터가 있습니다. 사이트에서 확인해야 합니다.")
         st.write("확인해야 할 데이터:")
-        st.dataframe(problematic_rows)
+        st.dataframe(problematic_rows, use_container_width=True)
     else:
         st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
 
     # df_log 전체 데이터 표시
     st.write("df_log 파일의 전체 데이터:")
-    st.dataframe(df_log)
+    st.dataframe(df_log, use_container_width=True)
 
 # df_list 파일 처리 및 검색 기능
 if df_list_file_path:
@@ -76,10 +76,10 @@ if df_list_file_path:
         # 검색어를 포함한 행 필터링
         search_results = df_list[df_list['제목'].str.contains(search_keyword, na=False)]
         st.write(f"'{search_keyword}' 검색 결과:")
-        st.dataframe(search_results)
+        st.dataframe(search_results, use_container_width=True)
     else:
         st.write("df_list 파일의 전체 데이터:")
-        st.dataframe(df_list)
+        st.dataframe(df_list, use_container_width=True)
 
 # 중간 일배치 수집 로그 텍스트
 st.subheader("일배치 수집 로그")
