@@ -35,6 +35,25 @@ def get_two_recent_files(file_prefix):
         return recent_files[0], None
     return None, None
 
+# 최근 일주일 내의 파일을 읽어오기 위한 함수
+def get_recent_file(file_prefix):
+    # 최근 일주일 내의 파일 목록
+    files = glob.glob(f"{file_prefix}_*.xlsx")
+    recent_files = []
+    for file in files:
+        # 파일명에서 날짜 추출
+        file_date_str = file.split('_')[-1].replace('.xlsx', '')
+        try:
+            file_date = datetime.strptime(file_date_str, '%Y%m%d')
+            if one_week_ago <= file_date <= today:
+                recent_files.append(file)
+        except ValueError:
+            continue
+    # 최근 파일 반환 (여러 개일 경우 가장 최신 파일 선택)
+    if recent_files:
+        return sorted(recent_files, reverse=True)[0]
+    return None
+
 # df_log 파일 읽기
 recent_file_path, previous_file_path = get_two_recent_files('df_log')
     
