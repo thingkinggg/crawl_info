@@ -41,13 +41,13 @@ if df_log_file_path:
 else:
     st.write("최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
 
-# df_fin 파일 읽기
-df_fin_file_path = get_recent_file('df_fin')
-if df_fin_file_path:
-    df_fin = pd.read_excel(df_fin_file_path, engine='openpyxl')
-    st.write(f"df_fin 파일: {df_fin_file_path}에서 데이터를 읽었습니다.")
+# df_list 파일 읽기
+df_list_file_path = get_recent_file('df_list')
+if df_list_file_path:
+    df_list = pd.read_excel(df_list_file_path, engine='openpyxl')
+    st.write(f"df_list 파일: {df_list_file_path}에서 데이터를 읽었습니다.")
 else:
-    st.write("최근 일주일 내에 df_fin 파일을 찾을 수 없습니다.")
+    st.write("최근 일주일 내에 df_list 파일을 찾을 수 없습니다.")
 
 # df_log 파일 처리
 if df_log_file_path:
