@@ -95,7 +95,7 @@ if recent_file_path and previous_file_path:
 
     # unique_date가 null이거나 1이고 max_date가 오늘 일자인 경우 필터링
     today_str = today.strftime('%Y-%m-%d')  # 오늘 일자 문자열 변환
-    problematic_rows = df_log_recent[(df_log_recent['unique_date'].isnull()) | ((df_log_recent['unique_date'] == 1) & (df_log_recent['max_date'] == today_str))]
+    problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == today_str))]
     
     # 경고 메시지 표시
     if not problematic_rows.empty:
@@ -104,10 +104,6 @@ if recent_file_path and previous_file_path:
         st.dataframe(problematic_rows, use_container_width=True)
     else:
         st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
-
-    # df_log_recent 전체 데이터 표시
-    st.write("최근 df_log 파일의 전체 데이터:")
-    st.dataframe(df_log_recent, use_container_width=True)
 
 else:
     st.write("비교를 위해 이전 파일과 최근 파일이 모두 필요합니다.")
