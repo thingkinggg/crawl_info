@@ -58,7 +58,7 @@ if df_log_file_path:
     
     # 경고 메시지 표시
     if not problematic_rows.empty:
-        st.warning("unique_date가 Null이거나 1인 경우이며, max_date가 오늘인 데이터가 있습니다. 사이트에서 확인해야 합니다.")
+        st.warning(f"unique_date가 Null이거나 1인 경우이며, max_date가 오늘인 데이터가 {len(problematic_rows)}건 있습니다. 사이트에서 확인해야 합니다.")
         st.write("확인해야 할 데이터:")
         st.dataframe(problematic_rows, use_container_width=True)
     else:
