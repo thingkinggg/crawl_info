@@ -54,7 +54,7 @@ else:
 if df_log_file_path:
     # unique_date가 null이거나 1이고 max_date가 오늘 일자인 경우 필터링
     today_str = today.strftime('%Y-%m-%d')  # 오늘 일자 문자열 변환
-    problematic_rows = df_log[(df_log['unique_date'].isnull() | (df_log['unique_date'] == 1)) & (df_log['max_date'] == today_str)]
+    problematic_rows = df_log[(df_log['unique_date'].isnull()) | ((df_log['unique_date'] == 1) & (df_log['max_date'] == today_str))]
     
     # 경고 메시지 표시
     if not problematic_rows.empty:
