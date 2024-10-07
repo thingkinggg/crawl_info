@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 
 st.title("🎈 지자체 크롤링")
 st.write(
-    "2024년 10월 7일 14:33 업데이트\r"
-    "작업진행상황 : 92개 site 최신 1page 수집 작업 완료\r"
+    "2024년 10월 7일 14:33 업데이트\n"
+    "작업진행상황 : 92개 site 최신 1page 수집 작업 완료\n"
     "향후진행상황 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경"
 )
 
