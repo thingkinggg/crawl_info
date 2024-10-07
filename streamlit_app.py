@@ -5,8 +5,8 @@ import os
 from datetime import datetime, timedelta
 
 st.title("🎈 지자체 크롤링")
-st.write("2024년 10월 7일 14:33 업데이트\n")
-st.write("작업진행상황 : 92개 site 최신 1page 수집 작업 완료\n")
+st.write("2024년 10월 7일 23:58 업데이트\n")
+st.write("작업진행상황 : 93개 site 최신 1page 수집 작업 완료\n")
 st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
 
 
@@ -15,9 +15,8 @@ today = datetime.today()
 one_week_ago = today - timedelta(days=7)
 today_str = today.strftime('%Y%m%d')
 
-# 최근 일주일 내의 파일을 읽어오기 위한 함수
-def get_recent_file(file_prefix):
-    # 최근 일주일 내의 파일 목록
+# 최근 파일 2개를 반환하는 함수
+def get_two_recent_files(file_prefix):
     files = glob.glob(f"{file_prefix}_*.xlsx")
     recent_files = []
     for file in files:
@@ -29,18 +28,33 @@ def get_recent_file(file_prefix):
                 recent_files.append(file)
         except ValueError:
             continue
-    # 최근 파일 반환 (여러 개일 경우 가장 최신 파일 선택)
-    if recent_files:
-        return sorted(recent_files, reverse=True)[0]
-    return None
+    # 최근 2개의 파일 반환 (최신 파일 순으로 정렬)
+    if len(recent_files) >= 2:
+        return sorted(recent_files, reverse=True)[:2]
+    elif len(recent_files) == 1:
+        return recent_files, None
+    return None, None
 
 # df_log 파일 읽기
-df_log_file_path = get_recent_file('df_log')
-if df_log_file_path:
-    df_log = pd.read_excel(df_log_file_path, engine='openpyxl')
-    st.write(f"df_log 파일: {df_log_file_path}에서 데이터를 읽었습니다.")
+recent_file_path, previous_file_path = get_two_recent_files('df_log')
+
+if recent_files and len(recent_files) == 2:
+    # 가장 최근 파일과 그 이전 파일 읽기
+    recent_file, previous_file = recent_files
+    
+# 최근 파일 처리
+if recent_file_path:
+    df_log_recent = pd.read_excel(recent_file_path, engine='openpyxl')
+    st.write(f"최근 df_log 파일: {recent_file_path}에서 데이터를 읽었습니다.")
 else:
     st.write("최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
+
+# 이전 파일 처리
+if previous_file_path:
+    df_log_previous = pd.read_excel(previous_file_path, engine='openpyxl')
+    st.write(f"이전 df_log 파일: {previous_file_path}에서 데이터를 읽었습니다.")
+else:
+    st.write("이전 df_log 파일을 찾을 수 없습니다.")
 
 # df_list 파일 읽기
 df_list_file_path = get_recent_file('df_list')
@@ -51,10 +65,17 @@ else:
     st.write("최근 일주일 내에 df_list 파일을 찾을 수 없습니다.")
 
 # df_log 파일 처리
-if df_log_file_path:
+if recent_file_path and previous_file_path:
+    # 파일들을 left join하여 비교
+    df_merged = pd.merge(df_log_recent, df_log_previous, on='SITE_NO', suffixes=('_recent', '_previous'), how='left')
+    
+    # 변경된 값 비교
+    st.write("최근 파일과 이전 파일을 left join한 데이터:")
+    st.dataframe(df_merged, use_container_width=True)
+
     # unique_date가 null이거나 1이고 max_date가 오늘 일자인 경우 필터링
     today_str = today.strftime('%Y-%m-%d')  # 오늘 일자 문자열 변환
-    problematic_rows = df_log[(df_log['unique_date'].isnull()) | ((df_log['unique_date'] == 1) & (df_log['max_date'] == today_str))]
+    problematic_rows = df_log_recent[(df_log_recent['unique_date'].isnull()) | ((df_log_recent['unique_date'] == 1) & (df_log_recent['max_date'] == today_str))]
     
     # 경고 메시지 표시
     if not problematic_rows.empty:
@@ -64,9 +85,13 @@ if df_log_file_path:
     else:
         st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
 
-    # df_log 전체 데이터 표시
-    st.write("df_log 파일의 전체 데이터:")
-    st.dataframe(df_log, use_container_width=True)
+    # df_log_recent 전체 데이터 표시
+    st.write("최근 df_log 파일의 전체 데이터:")
+    st.dataframe(df_log_recent, use_container_width=True)
+
+else:
+    st.write("비교를 위해 이전 파일과 최근 파일이 모두 필요합니다.")
+
 
 # df_list 파일 처리 및 검색 기능
 if df_list_file_path:
