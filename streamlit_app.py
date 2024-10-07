@@ -67,19 +67,19 @@ if df_log_file_path:
     st.write("df_log 파일의 전체 데이터:")
     st.dataframe(df_log)
 
-# df_fin 파일 처리 및 검색 기능
-if df_fin_file_path:
+# df_list 파일 처리 및 검색 기능
+if df_list_file_path:
     # 검색 기능 구현
-    search_keyword = st.text_input("df_fin 파일에서 검색할 키워드를 입력하세요")
+    search_keyword = st.text_input("df_list 파일에서 검색할 키워드를 입력하세요")
 
     if search_keyword:
         # 검색어를 포함한 행 필터링
-        search_results = df_fin[df_fin['제목'].str.contains(search_keyword, na=False)]
+        search_results = df_list[df_list['제목'].str.contains(search_keyword, na=False)]
         st.write(f"'{search_keyword}' 검색 결과:")
         st.dataframe(search_results)
     else:
-        st.write("df_fin 파일의 전체 데이터:")
-        st.dataframe(df_fin)
+        st.write("df_list 파일의 전체 데이터:")
+        st.dataframe(df_list)
 
 # 중간 일배치 수집 로그 텍스트
 st.subheader("일배치 수집 로그")
