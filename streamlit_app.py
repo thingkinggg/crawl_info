@@ -110,8 +110,6 @@ if df_list_file_paths:
     combined_df_list = combined_df_list.drop_duplicates()
     
     st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
-    st.write("중복이 제거된 df_list 데이터:")
-    st.dataframe(combined_df_list, use_container_width=True)
     
     # 검색 기능 구현
     search_keyword = st.text_input("df_list 파일에서 검색할 키워드를 입력하세요")
