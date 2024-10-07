@@ -82,7 +82,7 @@ else:
 # df_log 파일 처리
 if recent_file_path and previous_file_path:
     # 파일들을 left join하여 비교
-    df_merged = pd.merge(df_log_recent, df_log_previous, on='SITE_NO', suffixes=('_recent', '_previous'), how='left')
+    df_merged = pd.merge(df_log_recent, df_log_previous, on='URL', suffixes=('_recent', '_previous'), how='left')
     
     # 변경된 값 비교
     st.write("최근 파일과 이전 파일을 left join한 데이터:")
