@@ -128,12 +128,20 @@ else:
 # 중간 일배치 수집 로그 텍스트
 st.subheader("일배치 수집 로그")
 log_text = """
-Processing rows:  46%|████▌     | 43/93 [04:25<06:27,  7.76s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
-Processing rows:  51%|█████     | 47/93 [04:32<02:26,  3.18s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
+Processing rows:   0%|          | 0/93 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df.at[index, 'min_date'] = min_date
+<ipython-input-1-b1a9e246c457>:95: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df.at[index, 'max_date'] = max_date
+Processing rows:  16%|█▌        | 15/93 [00:22<02:20,  1.81s/it]페이지 로딩 시간이 초과되었습니다: 광주도시관리공사
+Processing rows:  17%|█▋        | 16/93 [01:53<37:00, 28.84s/it]광주도시관리공사페이지 정보를 추출할 수 없습니다.
+Processing rows:  46%|████▌     | 43/93 [04:22<05:06,  6.13s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
+Processing rows:  51%|█████     | 47/93 [04:26<01:37,  2.12s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
 경기도_김포시페이지 정보를 추출할 수 없습니다.
-Processing rows:  94%|█████████▎| 87/93 [10:45<01:14, 12.46s/it]강원도_정선군페이지 정보를 추출할 수 없습니다.
-Processing rows:  97%|█████████▋| 90/93 [11:02<00:25,  8.54s/it]읽기 타임아웃: 강원도_홍천군 서버가 데이터를 제공하는 시간이 초과되었습니다.
+Processing rows:  70%|██████▉   | 65/93 [06:23<02:44,  5.86s/it]연결 타임아웃: 경기도_의정부시 서버로부터 응답이 없습니다.
+경기도_의정부시페이지 정보를 추출할 수 없습니다.
+Processing rows:  94%|█████████▎| 87/93 [09:26<00:56,  9.43s/it]강원도_정선군페이지 정보를 추출할 수 없습니다.
+Processing rows:  97%|█████████▋| 90/93 [09:40<00:20,  6.86s/it]읽기 타임아웃: 강원도_홍천군 서버가 데이터를 제공하는 시간이 초과되었습니다.
 강원도_홍천군페이지 정보를 추출할 수 없습니다.
-Processing rows: 100%|██████████| 93/93 [11:25<00:00,  7.37s/it]
+Processing rows: 100%|██████████| 93/93 [09:57<00:00,  6.43s/it]
 """
 st.text(log_text)
