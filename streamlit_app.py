@@ -81,6 +81,9 @@ if recent_file_path and previous_file_path:
     st.write("최근 파일과 이전 파일을 left join한 데이터:")
     st.dataframe(df_merged, use_container_width=True)
 
+    # max_date_recent을 날짜 형식으로 변환 (필요한 경우)
+    df_merged['max_date_recent'] = pd.to_datetime(df_merged['max_date_recent'], errors='coerce')
+    
     # 1페이지 수집으로 덜 수집된 사이트리스트
     today_str = today.strftime('%Y-%m-%d')  # 오늘 일자 문자열 변환
     max_date_recent = df_merged['max_date_recent'].max()  # max 값을 가져오기
