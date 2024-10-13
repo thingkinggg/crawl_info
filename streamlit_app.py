@@ -5,8 +5,8 @@ import os
 from datetime import datetime, timedelta
 
 st.title("🎈 지자체 크롤링")
-st.write("2024년 10월 10일 23:58 업데이트\n")
-st.write("작업진행상황 : 93개 site 최신 1page 수집 작업 완료\n")
+st.write("2024년 10월 13일 23:46 업데이트\n")
+st.write("작업진행상황 : 99개 site 최신 1page 수집 작업 완료\n")
 st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
 
 
@@ -81,9 +81,9 @@ if recent_file_path and previous_file_path:
     st.write("최근 파일과 이전 파일을 left join한 데이터:")
     st.dataframe(df_merged, use_container_width=True)
 
-    # unique_date가 null이거나 1이고 max_date가 오늘 일자인 경우 필터링
+    # 1페이지 수집으로 덜 수집된 사이트리스트
     today_str = today.strftime('%Y-%m-%d')  # 오늘 일자 문자열 변환
-    problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == today_str))]
+    problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == max(df_merged['max_date_recent'])))]
     
     # 경고 메시지 표시
     if not problematic_rows.empty:
@@ -128,18 +128,15 @@ else:
 # 중간 일배치 수집 로그 텍스트
 st.subheader("일배치 수집 로그")
 log_text = """
-Processing rows:   0%|          | 0/93 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+Processing rows:   0%|          | 0/94 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'min_date'] = min_date
 <ipython-input-1-b1a9e246c457>:95: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'max_date'] = max_date
-Processing rows:  46%|████▌     | 43/93 [04:37<06:31,  7.83s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
-Processing rows:  51%|█████     | 47/93 [04:45<02:27,  3.21s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
+Processing rows:  46%|████▌     | 43/94 [04:20<06:34,  7.74s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
+Processing rows:  50%|█████     | 47/94 [04:30<02:55,  3.73s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
 경기도_김포시페이지 정보를 추출할 수 없습니다.
-Processing rows:  63%|██████▎   | 59/93 [06:39<04:26,  7.82s/it]연결 타임아웃: 경기도_안성시 서버로부터 응답이 없습니다.
-경기도_안성시페이지 정보를 추출할 수 없습니다.
-Processing rows:  94%|█████████▎| 87/93 [11:13<01:13, 12.25s/it]강원도_정선군페이지 정보를 추출할 수 없습니다.
-Processing rows:  97%|█████████▋| 90/93 [11:28<00:24,  8.18s/it]읽기 타임아웃: 강원도_홍천군 서버가 데이터를 제공하는 시간이 초과되었습니다.
-강원도_홍천군페이지 정보를 추출할 수 없습니다.
-Processing rows: 100%|██████████| 93/93 [11:51<00:00,  7.66s/it]
+Processing rows:  76%|███████▌  | 71/94 [07:56<03:27,  9.00s/it]읽기 타임아웃: 경기도_화성시 서버가 데이터를 제공하는 시간이 초과되었습니다.
+경기도_화성시페이지 정보를 추출할 수 없습니다.
+Processing rows: 100%|██████████| 94/94 [11:04<00:00,  7.07s/it]
 """
 st.text(log_text)
