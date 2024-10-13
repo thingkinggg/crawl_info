@@ -79,7 +79,7 @@ if recent_file_path and previous_file_path:
     
     # 변경된 값 비교
     st.write("최근 파일과 이전 파일을 left join한 데이터:")
-    st.dataframe(df_merged.unique(), use_container_width=True)
+    st.dataframe(df_merged, use_container_width=True)
 
     # max_date_recent을 날짜 형식으로 변환 (필요한 경우)
     df_merged['max_date_recent'] = pd.to_datetime(df_merged['max_date_recent'], errors='coerce')
