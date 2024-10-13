@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 st.title("🎈 지자체 크롤링")
 st.write("2024년 10월 13일 23:46 업데이트\n")
-st.write("작업진행상황 : 99개 site 최신 1page 수집 작업 완료\n")
+st.write("작업진행상황 : 95개 site 최신 1page 수집 작업 완료\n")
 st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
 
 
@@ -79,7 +79,7 @@ if recent_file_path and previous_file_path:
     
     # 변경된 값 비교
     st.write("최근 파일과 이전 파일을 left join한 데이터:")
-    st.dataframe(df_merged, use_container_width=True)
+    st.dataframe(df_merged.unique(), use_container_width=True)
 
     # max_date_recent을 날짜 형식으로 변환 (필요한 경우)
     df_merged['max_date_recent'] = pd.to_datetime(df_merged['max_date_recent'], errors='coerce')
