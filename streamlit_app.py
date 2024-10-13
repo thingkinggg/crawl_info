@@ -83,7 +83,8 @@ if recent_file_path and previous_file_path:
 
     # 1페이지 수집으로 덜 수집된 사이트리스트
     today_str = today.strftime('%Y-%m-%d')  # 오늘 일자 문자열 변환
-    problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == max(df_merged['max_date_recent'])))]
+    max_date_recent = df_merged['max_date_recent'].max()  # max 값을 가져오기
+    problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == max_date_recent))]
     
     # 경고 메시지 표시
     if not problematic_rows.empty:
