@@ -5,8 +5,8 @@ import os
 from datetime import datetime, timedelta
 
 st.title("🎈 지자체 크롤링")
-st.write("2024년 10월 13일 23:46 업데이트\n")
-st.write("작업진행상황 : 95개 site 최신 1page 수집 작업 완료\n")
+st.write("2024년 10월 14일 22:33 업데이트\n")
+st.write("작업진행상황 : 96개 site 최신 1page 수집 작업 완료\n")
 st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
 
 
@@ -132,15 +132,16 @@ else:
 # 중간 일배치 수집 로그 텍스트
 st.subheader("일배치 수집 로그")
 log_text = """
-Processing rows:   0%|          | 0/94 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+Processing rows:   0%|          | 0/97 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'min_date'] = min_date
 <ipython-input-1-b1a9e246c457>:95: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'max_date'] = max_date
-Processing rows:  46%|████▌     | 43/94 [04:20<06:34,  7.74s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
-Processing rows:  50%|█████     | 47/94 [04:30<02:55,  3.73s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
+Processing rows:  44%|████▍     | 43/97 [04:58<07:36,  8.46s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
+Processing rows:  48%|████▊     | 47/97 [05:06<02:56,  3.54s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
 경기도_김포시페이지 정보를 추출할 수 없습니다.
-Processing rows:  76%|███████▌  | 71/94 [07:56<03:27,  9.00s/it]읽기 타임아웃: 경기도_화성시 서버가 데이터를 제공하는 시간이 초과되었습니다.
-경기도_화성시페이지 정보를 추출할 수 없습니다.
-Processing rows: 100%|██████████| 94/94 [11:04<00:00,  7.07s/it]
+Processing rows:  61%|██████    | 59/97 [07:05<05:22,  8.50s/it]연결 타임아웃: 경기도_안성시 서버로부터 응답이 없습니다.
+경기도_안성시페이지 정보를 추출할 수 없습니다.
+Processing rows:  99%|█████████▉| 96/97 [12:32<00:07,  7.41s/it]충청도_괴산군페이지 정보를 추출할 수 없습니다.
+Processing rows: 100%|██████████| 97/97 [12:55<00:00,  7.99s/it]
 """
 st.text(log_text)
