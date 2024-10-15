@@ -7,8 +7,8 @@ from datetime import datetime, timedelta
 st.set_page_config(layout="wide")
 
 st.title("🎈 지자체 크롤링")
-st.write("2024년 10월 14일 22:33 업데이트\n")
-st.write("작업진행상황 : 96개 site 최신 1page 수집 작업 완료\n")
+st.write("2024년 10월 15일 22:33 업데이트\n")
+st.write("작업진행상황 : 102개 site 최신 1page 수집 작업 완료\n")
 st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
 
 
@@ -58,16 +58,16 @@ recent_file_path, previous_file_path = get_two_recent_files('df_log')
 # 최근 파일 처리
 if recent_file_path:
     df_log_recent = pd.read_excel(recent_file_path, engine='openpyxl')
-    st.write(f"최근 df_log 파일: {recent_file_path}에서 데이터를 읽었습니다.")
+    st.write(f" - 최근 df_log 파일: {recent_file_path}에서 데이터를 읽었습니다.")
 else:
-    st.write("최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
+    st.write(" - 최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
 
 # 이전 파일 처리
 if previous_file_path:
     df_log_previous = pd.read_excel(previous_file_path, engine='openpyxl')
-    st.write(f"이전 df_log 파일: {previous_file_path}에서 데이터를 읽었습니다.")
+    st.write(f" - 이전 df_log 파일: {previous_file_path}에서 데이터를 읽었습니다.")
 else:
-    st.write("이전 df_log 파일을 찾을 수 없습니다.")
+    st.write(" - 이전 df_log 파일을 찾을 수 없습니다.")
 
 # df_log 파일 처리
 if recent_file_path and previous_file_path:
@@ -164,16 +164,14 @@ else:
 # 중간 일배치 수집 로그 텍스트
 st.subheader("일배치 수집 로그")
 log_text = """
-Processing rows:   0%|          | 0/97 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+Processing rows:   0%|          | 0/103 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'min_date'] = min_date
 <ipython-input-1-b1a9e246c457>:95: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'max_date'] = max_date
-Processing rows:  44%|████▍     | 43/97 [04:58<07:36,  8.46s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
-Processing rows:  48%|████▊     | 47/97 [05:06<02:56,  3.54s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
+Processing rows:  42%|████▏     | 43/103 [04:42<07:58,  7.98s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
+Processing rows:  46%|████▌     | 47/103 [04:50<03:09,  3.38s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
 경기도_김포시페이지 정보를 추출할 수 없습니다.
-Processing rows:  61%|██████    | 59/97 [07:05<05:22,  8.50s/it]연결 타임아웃: 경기도_안성시 서버로부터 응답이 없습니다.
-경기도_안성시페이지 정보를 추출할 수 없습니다.
-Processing rows:  99%|█████████▉| 96/97 [12:32<00:07,  7.41s/it]충청도_괴산군페이지 정보를 추출할 수 없습니다.
-Processing rows: 100%|██████████| 97/97 [12:55<00:00,  7.99s/it]
+Processing rows:  84%|████████▍ | 87/103 [10:51<02:32,  9.54s/it]강원도_정선군페이지 정보를 추출할 수 없습니다.
+Processing rows: 100%|██████████| 103/103 [13:51<00:00,  8.07s/it]
 """
 st.text(log_text)
