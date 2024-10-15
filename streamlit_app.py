@@ -133,13 +133,13 @@ if df_list_file_paths:
             width: 100%;
         }
         th, td {
-            padding: 10px;
+            padding: 5px;
         }
         th {
             text-align: left;
         }
         td {
-            max-width: 300px;
+            max-width: 200px;
             overflow-wrap: break-word;
         }
         </style>
