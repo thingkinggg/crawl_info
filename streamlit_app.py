@@ -131,10 +131,10 @@ if df_list_file_paths:
         # 검색어를 포함한 행 필터링
         search_results = combined_df_list[combined_df_list['제목'].str.contains(search_keyword, na=False)]
         st.write(f"'{search_keyword}' 검색 결과:")
-        st.dataframe(search_results, use_container_width=True)
+        st.markdown(search_results.to_html(escape=False), unsafe_allow_html=True)
     else:
         st.write("df_list 파일의 전체 데이터:")
-        st.dataframe(combined_df_list, use_container_width=True)
+        st.markdown(combined_df_list.to_html(escape=False), unsafe_allow_html=True)
 else:
     st.write("최근 일주일 내에 df_list 파일을 찾을 수 없습니다.")
 
