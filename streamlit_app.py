@@ -121,6 +121,25 @@ if df_list_file_paths:
 
     # URL 컬럼을 하이퍼링크로 변환
     combined_df_list['URL'] = combined_df_list['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
+
+    # CSS 스타일 추가 (제목, 출처 컬럼 폭을 넓히기)
+    st.markdown("""
+        <style>
+        table {
+            width: 100%;
+        }
+        th, td {
+            padding: 10px;
+        }
+        th {
+            text-align: left;
+        }
+        td {
+            max-width: 300px;
+            overflow-wrap: break-word;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     
     st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
     
