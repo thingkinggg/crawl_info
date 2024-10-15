@@ -118,6 +118,9 @@ if df_list_file_paths:
     # 원하는 순서로 컬럼 재배치
     column_order = ['SITE_NO', '출처', '제목', 'URL', '작성일']
     combined_df_list = combined_df_list.reindex(columns=column_order)
+
+    # URL 컬럼을 하이퍼링크로 변환
+    combined_df_list['URL'] = combined_df_list['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
     
     st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
     
