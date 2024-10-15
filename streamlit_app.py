@@ -122,6 +122,10 @@ if df_list_file_paths:
     # URL 컬럼을 하이퍼링크로 변환
     combined_df_list['URL'] = combined_df_list['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
 
+    # '작성일' 기준으로 내림차순 정렬
+    combined_df_list['작성일'] = pd.to_datetime(combined_df_list['작성일'], errors='coerce')  # 작성일이 날짜 형식으로 변환
+    combined_df_list = combined_df_list.sort_values(by='작성일', ascending=False)  # 내림차순 정렬
+
     # CSS 스타일 추가 (제목, 출처 컬럼 폭을 넓히기)
     st.markdown("""
         <style>
