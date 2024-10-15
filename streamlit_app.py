@@ -4,6 +4,8 @@ import glob
 import os
 from datetime import datetime, timedelta
 
+st.set_page_config(layout="wide")
+
 st.title("🎈 지자체 크롤링")
 st.write("2024년 10월 14일 22:33 업데이트\n")
 st.write("작업진행상황 : 96개 site 최신 1page 수집 작업 완료\n")
