@@ -92,7 +92,7 @@ if recent_file_path and previous_file_path:
     # 경고 메시지 표시
     if not problematic_rows.empty:
         st.warning(f"덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
-        st.write("확인해야 할 데이터:")
+        st.write("확인해야 할 사이트:")
         st.dataframe(problematic_rows, use_container_width=True)
     else:
         st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
@@ -112,6 +112,10 @@ if df_list_file_paths:
     
     # 중복 제거
     combined_df_list = combined_df_list.drop_duplicates()
+
+    # 원하는 순서로 컬럼 재배치
+    column_order = ['SITE_NO', '출처', '제목', 'URL', '작성일']
+    combined_df_list = combined_df_list.reindex(columns=column_order)
     
     st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
     
