@@ -205,6 +205,19 @@ def main_app():
     """
     st.text(log_text)
 
+    # 접속 이력 확인
+    st.subheader("접속 이력 기록")
+    
+    # access_log.csv 파일이 있는지 확인
+    log_file_path = "access_log.csv"
+    if os.path.exists(log_file_path):
+        # CSV 파일 읽기
+        log_df = pd.read_csv(log_file_path)
+        st.write("최근 접속 이력:")
+        st.dataframe(log_df)  # 데이터를 표 형태로 표시
+    else:
+        st.write("접속 이력 파일을 찾을 수 없습니다.")
+
 # Main 실행 함수
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
