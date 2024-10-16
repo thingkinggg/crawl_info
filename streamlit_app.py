@@ -1,140 +1,37 @@
 import streamlit as st
+import yaml
+from yaml.loader import SafeLoader
+import streamlit_authenticator as stauth
 import pandas as pd
 import glob
 import os
 from datetime import datetime, timedelta
-import hashlib
-import json
 
+# 페이지 설정
 st.set_page_config(layout="wide")
 
-# 사용자 데이터 파일
-USER_DATA_FILE = "user_data.json"
+# YAML 파일에서 config 로드
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
 
-# 사용자 데이터 로드
-def load_user_data():
-    if os.path.exists(USER_DATA_FILE):
-        with open(USER_DATA_FILE, "r") as f:
-            return json.load(f)
-    return {
-        "admin": {
-            "password": hash_password("admin123"),
-            "is_admin": True,
-            "login_history": [],
-            "password_changes": []
-        },
-        "user": {
-            "password": hash_password("user123"),
-            "is_admin": False,
-            "login_history": [],
-            "password_changes": []
-        }
-    }
+# 인증자 생성
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['preauthorized']
+)
 
-# 사용자 데이터 저장
-def save_user_data(data):
-    with open(USER_DATA_FILE, "w") as f:
-        json.dump(data, f)
+# 로그인 위젯 생성
+name, authentication_status, username = authenticator.login('Login', 'main')
 
-# 비밀번호 해시 함수
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-
-# 로그인 함수
-def login():
-    st.title("🎈 지자체 크롤링 로그인")
-    username = st.text_input("사용자 이름")
-    password = st.text_input("비밀번호", type="password")
-    if st.button("로그인"):
-        users = load_user_data()
-        if username in users and users[username]["password"] == hash_password(password):
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.session_state.is_admin = users[username]["is_admin"]
-            log_login(username)
-            st.success("로그인 성공!")
-            st.rerun()
-        else:
-            st.error("사용자 이름 또는 비밀번호가 올바르지 않습니다.")
-
-# 로그인 기록 함수
-def log_login(username):
-    users = load_user_data()
-    users[username]["login_history"].append({
-        "timestamp": datetime.now().isoformat(),
-        "ip_address": st.session_state.get("client_ip", "Unknown")
-    })
-    save_user_data(users)
-
-# 비밀번호 변경 함수
-def change_password():
-    st.title("비밀번호 변경")
-    current_password = st.text_input("현재 비밀번호", type="password")
-    new_password = st.text_input("새 비밀번호", type="password")
-    confirm_password = st.text_input("새 비밀번호 확인", type="password")
-    if st.button("비밀번호 변경"):
-        users = load_user_data()
-        if users[st.session_state.username]["password"] == hash_password(current_password):
-            if new_password == confirm_password:
-                users[st.session_state.username]["password"] = hash_password(new_password)
-                log_password_change(st.session_state.username)
-                save_user_data(users)
-                st.success("비밀번호가 성공적으로 변경되었습니다.")
-            else:
-                st.error("새 비밀번호가 일치하지 않습니다.")
-        else:
-            st.error("현재 비밀번호가 올바르지 않습니다.")
-
-# 비밀번호 변경 기록 함수
-def log_password_change(username):
-    users = load_user_data()
-    users[username]["password_changes"].append({
-        "timestamp": datetime.now().isoformat(),
-        "ip_address": st.session_state.get("client_ip", "Unknown")
-    })
-    save_user_data(users)
-
-# 관리자 페이지
-def admin_page():
-    st.title("관리자 페이지")
+# 인증 상태에 따른 처리
+if authentication_status:
+    authenticator.logout('Logout', 'main')
+    st.write(f'환영합니다 *{name}*')
     
-    # 새 사용자 등록
-    st.subheader("새 사용자 등록")
-    new_username = st.text_input("새 사용자 이름")
-    new_password = st.text_input("새 사용자 비밀번호", type="password")
-    if st.button("사용자 등록"):
-        if new_username and new_password:
-            users = load_user_data()
-            if new_username not in users:
-                users[new_username] = {
-                    "password": hash_password(new_password),
-                    "is_admin": False,
-                    "login_history": [],
-                    "password_changes": []
-                }
-                save_user_data(users)
-                st.success(f"사용자 {new_username}가 성공적으로 등록되었습니다.")
-            else:
-                st.error("이미 존재하는 사용자 이름입니다.")
-        else:
-            st.error("사용자 이름과 비밀번호를 모두 입력해주세요.")
-    
-    # 사용자 정보 조회
-    st.subheader("사용자 정보 조회")
-    users = load_user_data()
-    for username, data in users.items():
-        st.write(f"사용자: {username}")
-        st.write("로그인 이력:")
-        for login in data["login_history"]:
-            st.write(f"  - {login['timestamp']} (IP: {login['ip_address']})")
-        st.write("비밀번호 변경 이력:")
-        for change in data["password_changes"]:
-            st.write(f"  - {change['timestamp']} (IP: {change['ip_address']})")
-        st.write("---")
-
-
-# 메인 애플리케이션
-def main_app():
+    # 메인 애플리케이션 코드
     st.title("🎈 지자체 크롤링")
     st.write("2024년 10월 15일 22:33 업데이트\n")
     st.write("작업진행상황 : 102개 site 최신 1page 수집 작업 완료\n")
@@ -287,33 +184,29 @@ def main_app():
     """
     st.text(log_text)
 
-    if st.button("비밀번호 변경"):
-        st.session_state.change_password = True
-        st.rerun()
-    
-    if st.session_state.is_admin:
-        if st.button("관리자 페이지"):
-            st.session_state.admin_page = True
-            st.rerun()
-    
-    if st.button("로그아웃"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+    # 관리자 기능 (admin 사용자만 접근 가능)
+    if username == "admin":
+        st.subheader("관리자 기능")
+        if st.button("비밀번호 변경"):
+            try:
+                if authenticator.reset_password(username, 'Reset password'):
+                    st.success('Password modified successfully')
+                    with open('config.yaml', 'w') as file:
+                        yaml.dump(config, file, default_flow_style=False)
+            except Exception as e:
+                st.error(e)
 
-# 메인 실행 흐름
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
+elif authentication_status == False:
+    st.error('Username/password is incorrect')
+elif authentication_status == None:
+    st.warning('Please enter your username and password')
 
-# 클라이언트 IP 주소 가져오기 (실제 환경에 맞게 수정 필요)
-st.session_state.client_ip = "127.0.0.1"
-
-if not st.session_state.logged_in:
-    login()
-else:
-    if 'change_password' in st.session_state and st.session_state.change_password:
-        change_password()
-    elif 'admin_page' in st.session_state and st.session_state.admin_page and st.session_state.is_admin:
-        admin_page()
-    else:
-        main_app()
+# 사용자 등록 (여기서는 비활성화되어 있음)
+# if authentication_status == None:
+#     try:
+#         if authenticator.register_user('Register user', preauthorization=False):
+#             st.success('User registered successfully')
+#             with open('config.yaml', 'w') as file:
+#                 yaml.dump(config, file, default_flow_style=False)
+#     except Exception as e:
+#         st.error(e)
