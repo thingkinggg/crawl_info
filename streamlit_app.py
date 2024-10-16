@@ -8,16 +8,49 @@ st.set_page_config(layout="wide")
 
 PASSWORD = "ycenc1308"
 
+# 로그인 함수
 def login():
     st.title("🎈 지자체 크롤링 로그인")
     password = st.text_input("비밀번호를 입력하세요", type="password")
     if st.button("로그인"):
         if password == PASSWORD:
             st.session_state.logged_in = True
+            # 접속 이력 기록
+            log_access()
             st.success("로그인 성공!")
             st.rerun()
         else:
             st.error("비밀번호가 올바르지 않습니다.")
+# 접속 이력 기록 함수
+def log_access():
+    ip = get_ip()
+    access_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    user_agent = st.session_state.user_agent if 'user_agent' in st.session_state else 'unknown'
+    
+    log_data = {
+        "접속시간": [access_time],
+        "IP 주소": [ip],
+        "User Agent": [user_agent]
+    }
+    
+    # 로그 파일 저장 (CSV 또는 데이터베이스로 변경 가능)
+    log_df = pd.DataFrame(log_data)
+    if os.path.exists("access_log.csv"):
+        log_df.to_csv("access_log.csv", mode='a', header=False, index=False)
+    else:
+        log_df.to_csv("access_log.csv", mode='w', header=True, index=False)
+    
+    st.write(f"접속 기록: IP={ip}, 접속시간={access_time}, User Agent={user_agent}")
+
+# 사용자 IP 주소 가져오기
+def get_ip():
+    try:
+        # 외부 API를 사용하여 IP 주소 가져오기
+        ip_data = requests.get('https://api64.ipify.org?format=json').json()
+        return ip_data['ip']
+    except:
+        return 'Unknown'
+
 
 def main_app():
     st.title("🎈 지자체 크롤링")
@@ -172,9 +205,13 @@ def main_app():
     """
     st.text(log_text)
 
-# 메인 실행 흐름
+# Main 실행 함수
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
+
+if 'user_agent' not in st.session_state:
+    # 브라우저의 User Agent 정보를 가져오기 위해 session_state에 저장
+    st.session_state.user_agent = st.experimental_get_query_params().get('user_agent', ['unknown'])[0]
 
 if not st.session_state.logged_in:
     login()
