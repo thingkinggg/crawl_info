@@ -13,25 +13,36 @@ st.set_page_config(layout="wide")
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "admin_password_123"  # 실제 운영 환경에서는 더 강력한 비밀번호를 사용해야 합니다
 
-# 데이터베이스 설정
-conn = sqlite3.connect('user_database.db')
-c = conn.cursor()
+# 데이터베이스 연결 함수
+def get_db_connection():
+    conn = sqlite3.connect('user_database.db', check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-# 사용자 테이블 생성 (is_admin 컬럼 추가)
-c.execute('''CREATE TABLE IF NOT EXISTS users
-             (id INTEGER PRIMARY KEY AUTOINCREMENT,
-              username TEXT UNIQUE NOT NULL,
-              password TEXT NOT NULL,
-              salt TEXT NOT NULL,
-              is_admin INTEGER DEFAULT 0)''')
+# 데이터베이스 초기화 함수
+def init_db():
+    conn = get_db_connection()
+    c = conn.cursor()
+    
+    # 사용자 테이블 생성
+    c.execute('''CREATE TABLE IF NOT EXISTS users
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  username TEXT UNIQUE NOT NULL,
+                  password TEXT NOT NULL,
+                  salt TEXT NOT NULL,
+                  is_admin INTEGER DEFAULT 0)''')
+    
+    # 로그인 이력 테이블 생성
+    c.execute('''CREATE TABLE IF NOT EXISTS login_history
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  username TEXT NOT NULL,
+                  login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+    
+    conn.commit()
+    conn.close()
 
-# 로그인 이력 테이블 생성
-c.execute('''CREATE TABLE IF NOT EXISTS login_history
-             (id INTEGER PRIMARY KEY AUTOINCREMENT,
-              username TEXT NOT NULL,
-              login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
-
-conn.commit()
+# 데이터베이스 초기화
+init_db()
 
 def hash_password(password, salt=None):
     if salt is None:
@@ -42,6 +53,8 @@ def verify_password(stored_password, stored_salt, provided_password):
     return stored_password == hashlib.sha256(stored_salt.encode() + provided_password.encode()).hexdigest()
 
 def create_user(username, password, is_admin=0):
+    conn = get_db_connection()
+    c = conn.cursor()
     hashed_password, salt = hash_password(password)
     try:
         c.execute("INSERT INTO users (username, password, salt, is_admin) VALUES (?, ?, ?, ?)", 
@@ -50,55 +63,89 @@ def create_user(username, password, is_admin=0):
         return True
     except sqlite3.IntegrityError:
         return False
+    finally:
+        conn.close()
 
 def verify_user(username, password):
     if username == ADMIN_USERNAME:
         return password == ADMIN_PASSWORD
+    conn = get_db_connection()
+    c = conn.cursor()
     c.execute("SELECT password, salt FROM users WHERE username=?", (username,))
     result = c.fetchone()
+    conn.close()
     if result:
-        stored_password, stored_salt = result
+        stored_password, stored_salt = result['password'], result['salt']
         return verify_password(stored_password, stored_salt, password)
     return False
 
 def change_password(username, new_password):
     if username != ADMIN_USERNAME:
+        conn = get_db_connection()
+        c = conn.cursor()
         hashed_password, salt = hash_password(new_password)
         c.execute("UPDATE users SET password=?, salt=? WHERE username=?", 
                   (hashed_password, salt, username))
         conn.commit()
+        conn.close()
 
 def log_login(username):
+    conn = get_db_connection()
+    c = conn.cursor()
     c.execute("INSERT INTO login_history (username) VALUES (?)", (username,))
     conn.commit()
+    conn.close()
 
 def get_login_history(username):
+    conn = get_db_connection()
+    c = conn.cursor()
     c.execute("SELECT login_time FROM login_history WHERE username=? ORDER BY login_time DESC LIMIT 5", (username,))
-    return c.fetchall()
+    result = c.fetchall()
+    conn.close()
+    return result
 
 def is_admin(username):
-    return username == ADMIN_USERNAME or (c.execute("SELECT is_admin FROM users WHERE username=?", (username,)).fetchone() or (False,))[0]
+    if username == ADMIN_USERNAME:
+        return True
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT is_admin FROM users WHERE username=?", (username,))
+    result = c.fetchone()
+    conn.close()
+    return result['is_admin'] if result else False
 
 def get_all_users():
+    conn = get_db_connection()
+    c = conn.cursor()
     c.execute("SELECT username, is_admin FROM users")
     users = c.fetchall()
-    return [(ADMIN_USERNAME, 1)] + users  # Admin 사용자를 목록 맨 앞에 추가
+    conn.close()
+    return [(ADMIN_USERNAME, 1)] + [(user['username'], user['is_admin']) for user in users]
 
 def delete_user(username):
     if username != ADMIN_USERNAME:
+        conn = get_db_connection()
+        c = conn.cursor()
         c.execute("DELETE FROM users WHERE username=?", (username,))
         conn.commit()
+        conn.close()
 
 def toggle_admin(username):
     if username != ADMIN_USERNAME:
+        conn = get_db_connection()
+        c = conn.cursor()
         c.execute("UPDATE users SET is_admin = 1 - is_admin WHERE username=?", (username,))
         conn.commit()
+        conn.close()
 
 # Admin 계정이 없으면 생성
 def ensure_admin_exists():
+    conn = get_db_connection()
+    c = conn.cursor()
     c.execute("SELECT * FROM users WHERE username=?", (ADMIN_USERNAME,))
     if not c.fetchone():
         create_user(ADMIN_USERNAME, ADMIN_PASSWORD, is_admin=1)
+    conn.close()
 
 # 애플리케이션 시작 시 Admin 계정 확인
 ensure_admin_exists()
@@ -384,6 +431,3 @@ else:
         admin_page()
     else:
         main_app()
-
-# 데이터베이스 연결 종료
-conn.close()
