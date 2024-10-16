@@ -19,7 +19,8 @@ def login():
         if password == PASSWORD:
             st.session_state["logged_in"] = True
             st.success("로그인 성공!")
-            st.experimental_rerun()  # 로그인 성공 후 화면을 갱신
+            st.legacy_caching.clear_cache()
+            st.experimental_rerun()
         else:
             st.error("비밀번호가 올바르지 않습니다.")
 
