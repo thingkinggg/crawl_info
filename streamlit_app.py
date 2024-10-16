@@ -19,6 +19,7 @@ def login():
         if password == PASSWORD:
             st.session_state["logged_in"] = True
             st.success("로그인 성공!")
+            st.experimental_rerun()  # 로그인 성공 후 화면을 갱신
         else:
             st.error("비밀번호가 올바르지 않습니다.")
 
@@ -29,8 +30,6 @@ if "logged_in" not in st.session_state:
 if not st.session_state["logged_in"]:
     login()
 else:
-    
-
     st.title("🎈 지자체 크롤링")
     st.write("2024년 10월 15일 22:33 업데이트\n")
     st.write("작업진행상황 : 102개 site 최신 1page 수집 작업 완료\n")
