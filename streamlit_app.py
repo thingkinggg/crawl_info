@@ -31,6 +31,14 @@ conn.commit()
 
 # 기존의 함수들 (hash_password, verify_password, verify_user, log_login, get_login_history)은 그대로 유지
 
+def hash_password(password, salt=None):
+    if salt is None:
+        salt = uuid.uuid4().hex
+    return hashlib.sha256(salt.encode() + password.encode()).hexdigest(), salt
+
+def verify_password(stored_password, stored_salt, provided_password):
+    return stored_password == hashlib.sha256(stored_salt.encode() + provided_password.encode()).hexdigest()
+
 def create_user(username, password, is_admin=0):
     hashed_password, salt = hash_password(password)
     try:
@@ -41,11 +49,27 @@ def create_user(username, password, is_admin=0):
     except sqlite3.IntegrityError:
         return False
 
+def verify_user(username, password):
+    c.execute("SELECT password, salt FROM users WHERE username=?", (username,))
+    result = c.fetchone()
+    if result:
+        stored_password, stored_salt = result
+        return verify_password(stored_password, stored_salt, password)
+    return False
+
 def change_password(username, new_password):
     hashed_password, salt = hash_password(new_password)
     c.execute("UPDATE users SET password=?, salt=? WHERE username=?", 
               (hashed_password, salt, username))
     conn.commit()
+
+def log_login(username):
+    c.execute("INSERT INTO login_history (username) VALUES (?)", (username,))
+    conn.commit()
+
+def get_login_history(username):
+    c.execute("SELECT login_time FROM login_history WHERE username=? ORDER BY login_time DESC LIMIT 5", (username,))
+    return c.fetchall()
 
 def is_admin(username):
     c.execute("SELECT is_admin FROM users WHERE username=?", (username,))
@@ -147,6 +171,7 @@ def admin_page():
                 new_password = "password123"  # 초기 비밀번호
                 change_password(user[0], new_password)
                 st.success(f"{user[0]}의 비밀번호가 초기화되었습니다.")
+
               
 def main_app():
     st.title("🎈 지자체 크롤링")
