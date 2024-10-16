@@ -21,17 +21,25 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-# 로그인 위젯 생성
-authentication_status = None
+# 인증 상태 초기화
+if 'authentication_status' not in st.session_state:
+    st.session_state['authentication_status'] = None
 
-with st.form("login_form"):
-    name, authentication_status, username = authenticator.login('Login', 'main')
-    submitted = st.form_submit_button("Submit")
+# 로그인 폼
+if st.session_state["authentication_status"] != True:
+    try:
+        name, authentication_status, username = authenticator.login('Login', 'main')
+        st.session_state['authentication_status'] = authentication_status
+        st.session_state['name'] = name
+        st.session_state['username'] = username
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        st.session_state['authentication_status'] = None
 
 # 인증 상태에 따른 처리
-if authentication_status:
+if st.session_state['authentication_status']:
     authenticator.logout('Logout', 'main')
-    st.write(f'환영합니다 *{name}*')
+    st.write(f'환영합니다 *{st.session_state["name"]}*')
     
     # 메인 애플리케이션 코드
     st.title("🎈 지자체 크롤링")
@@ -202,3 +210,16 @@ elif authentication_status == False:
     st.error('Username/password is incorrect')
 elif authentication_status == None:
     st.warning('Please enter your username and password')
+
+
+# 관리자 기능 (admin 사용자만 접근 가능)
+if st.session_state.get('authentication_status') and st.session_state.get('username') == "admin":
+    st.subheader("관리자 기능")
+    if st.button("비밀번호 변경"):
+        try:
+            if authenticator.reset_password(st.session_state['username'], 'Reset password'):
+                st.success('Password modified successfully')
+                with open('config.json', 'w') as file:
+                    json.dump(config, file, indent=4)
+        except Exception as e:
+            st.error(str(e))
