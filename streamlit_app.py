@@ -6,14 +6,6 @@ from datetime import datetime, timedelta
 
 st.set_page_config(layout="wide")
 
-import streamlit as st
-import pandas as pd
-import glob
-import os
-from datetime import datetime, timedelta
-
-st.set_page_config(layout="wide")
-
 PASSWORD = "ycenc1308"  # 비밀번호를 여기에 설정하거나 환경변수를 사용할 수 있습니다.
 
 # 간단한 로그인 함수
