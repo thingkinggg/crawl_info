@@ -9,6 +9,10 @@ import uuid
 
 st.set_page_config(layout="wide")
 
+# 하드코딩된 관리자 정보
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "admin_password_123"  # 실제 운영 환경에서는 더 강력한 비밀번호를 사용해야 합니다
+
 # 데이터베이스 설정
 conn = sqlite3.connect('user_database.db')
 c = conn.cursor()
@@ -29,8 +33,6 @@ c.execute('''CREATE TABLE IF NOT EXISTS login_history
 
 conn.commit()
 
-# 기존의 함수들 (hash_password, verify_password, verify_user, log_login, get_login_history)은 그대로 유지
-
 def hash_password(password, salt=None):
     if salt is None:
         salt = uuid.uuid4().hex
@@ -50,6 +52,8 @@ def create_user(username, password, is_admin=0):
         return False
 
 def verify_user(username, password):
+    if username == ADMIN_USERNAME:
+        return password == ADMIN_PASSWORD
     c.execute("SELECT password, salt FROM users WHERE username=?", (username,))
     result = c.fetchone()
     if result:
@@ -58,10 +62,11 @@ def verify_user(username, password):
     return False
 
 def change_password(username, new_password):
-    hashed_password, salt = hash_password(new_password)
-    c.execute("UPDATE users SET password=?, salt=? WHERE username=?", 
-              (hashed_password, salt, username))
-    conn.commit()
+    if username != ADMIN_USERNAME:
+        hashed_password, salt = hash_password(new_password)
+        c.execute("UPDATE users SET password=?, salt=? WHERE username=?", 
+                  (hashed_password, salt, username))
+        conn.commit()
 
 def log_login(username):
     c.execute("INSERT INTO login_history (username) VALUES (?)", (username,))
@@ -72,21 +77,31 @@ def get_login_history(username):
     return c.fetchall()
 
 def is_admin(username):
-    c.execute("SELECT is_admin FROM users WHERE username=?", (username,))
-    result = c.fetchone()
-    return result[0] if result else False
+    return username == ADMIN_USERNAME or (c.execute("SELECT is_admin FROM users WHERE username=?", (username,)).fetchone() or (False,))[0]
 
 def get_all_users():
     c.execute("SELECT username, is_admin FROM users")
-    return c.fetchall()
+    users = c.fetchall()
+    return [(ADMIN_USERNAME, 1)] + users  # Admin 사용자를 목록 맨 앞에 추가
 
 def delete_user(username):
-    c.execute("DELETE FROM users WHERE username=?", (username,))
-    conn.commit()
+    if username != ADMIN_USERNAME:
+        c.execute("DELETE FROM users WHERE username=?", (username,))
+        conn.commit()
 
 def toggle_admin(username):
-    c.execute("UPDATE users SET is_admin = 1 - is_admin WHERE username=?", (username,))
-    conn.commit()
+    if username != ADMIN_USERNAME:
+        c.execute("UPDATE users SET is_admin = 1 - is_admin WHERE username=?", (username,))
+        conn.commit()
+
+# Admin 계정이 없으면 생성
+def ensure_admin_exists():
+    c.execute("SELECT * FROM users WHERE username=?", (ADMIN_USERNAME,))
+    if not c.fetchone():
+        create_user(ADMIN_USERNAME, ADMIN_PASSWORD, is_admin=1)
+
+# 애플리케이션 시작 시 Admin 계정 확인
+ensure_admin_exists()
 
 def login_page():
     st.title("🎈 지자체 크롤링 로그인")
@@ -115,6 +130,8 @@ def register_page():
     if st.button("등록"):
         if password != confirm_password:
             st.error("비밀번호가 일치하지 않습니다.")
+        elif username == ADMIN_USERNAME:
+            st.error("이 사용자 이름은 사용할 수 없습니다.")
         elif create_user(username, password):
             st.success("사용자가 성공적으로 등록되었습니다.")
             st.session_state.register = False
@@ -128,6 +145,10 @@ def register_page():
 
 def change_password_page():
     st.title("비밀번호 변경")
+    if st.session_state.username == ADMIN_USERNAME:
+        st.error("관리자 계정의 비밀번호는 변경할 수 없습니다.")
+        return
+    
     current_password = st.text_input("현재 비밀번호", type="password")
     new_password = st.text_input("새 비밀번호", type="password")
     confirm_new_password = st.text_input("새 비밀번호 확인", type="password")
@@ -156,22 +177,21 @@ def admin_page():
         with col1:
             st.write(f"사용자: {user[0]}")
         with col2:
-            if st.button("삭제", key=f"delete_{user[0]}"):
+            if user[0] != ADMIN_USERNAME and st.button("삭제", key=f"delete_{user[0]}"):
                 delete_user(user[0])
                 st.success(f"{user[0]} 사용자가 삭제되었습니다.")
                 st.rerun()
         with col3:
             admin_status = "관리자" if user[1] else "일반사용자"
-            if st.button(f"{admin_status} 전환", key=f"toggle_{user[0]}"):
+            if user[0] != ADMIN_USERNAME and st.button(f"{admin_status} 전환", key=f"toggle_{user[0]}"):
                 toggle_admin(user[0])
                 st.success(f"{user[0]}의 관리자 상태가 변경되었습니다.")
                 st.rerun()
         with col4:
-            if st.button("비밀번호 초기화", key=f"reset_{user[0]}"):
+            if user[0] != ADMIN_USERNAME and st.button("비밀번호 초기화", key=f"reset_{user[0]}"):
                 new_password = "password123"  # 초기 비밀번호
                 change_password(user[0], new_password)
                 st.success(f"{user[0]}의 비밀번호가 초기화되었습니다.")
-
               
 def main_app():
     st.title("🎈 지자체 크롤링")
