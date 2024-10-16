@@ -7,6 +7,8 @@ import sqlite3
 import hashlib
 import uuid
 
+st.set_page_config(layout="wide")
+
 # 데이터베이스 설정
 conn = sqlite3.connect('user_database.db')
 c = conn.cursor()
