@@ -8,7 +8,7 @@ st.set_page_config(layout="wide")
 
 # 사용자 정보
 users = {
-    "admin": "ycenc1308",
+    "admin": "yc123",
     "yc": "yc123"
 }
 
