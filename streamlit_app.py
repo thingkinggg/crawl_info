@@ -24,7 +24,6 @@ def login():
             st.error("비밀번호가 올바르지 않습니다.")
 # 접속 이력 기록 함수
 def log_access():
-    ip = get_ip()
     access_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     log_data = {
         "접속시간": [access_time],
