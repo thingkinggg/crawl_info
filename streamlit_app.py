@@ -8,18 +8,6 @@ import json
 
 st.set_page_config(layout="wide")
 
-# 하드코딩된 사용자 정보
-USERS = {
-    "admin": {
-        "password": "admin123",
-        "is_admin": True
-    },
-    "user": {
-        "password": "user123",
-        "is_admin": False
-    }
-}
-
 # 사용자 데이터 파일
 USER_DATA_FILE = "user_data.json"
 
@@ -28,7 +16,20 @@ def load_user_data():
     if os.path.exists(USER_DATA_FILE):
         with open(USER_DATA_FILE, "r") as f:
             return json.load(f)
-    return {}
+    return {
+        "admin": {
+            "password": hash_password("admin123"),
+            "is_admin": True,
+            "login_history": [],
+            "password_changes": []
+        },
+        "user": {
+            "password": hash_password("user123"),
+            "is_admin": False,
+            "login_history": [],
+            "password_changes": []
+        }
+    }
 
 # 사용자 데이터 저장
 def save_user_data(data):
@@ -45,10 +46,11 @@ def login():
     username = st.text_input("사용자 이름")
     password = st.text_input("비밀번호", type="password")
     if st.button("로그인"):
-        if username in USERS and USERS[username]["password"] == password:
+        users = load_user_data()
+        if username in users and users[username]["password"] == hash_password(password):
             st.session_state.logged_in = True
             st.session_state.username = username
-            st.session_state.is_admin = USERS[username]["is_admin"]
+            st.session_state.is_admin = users[username]["is_admin"]
             log_login(username)
             st.success("로그인 성공!")
             st.rerun()
@@ -57,14 +59,12 @@ def login():
 
 # 로그인 기록 함수
 def log_login(username):
-    user_data = load_user_data()
-    if username not in user_data:
-        user_data[username] = {"login_history": [], "password_changes": []}
-    user_data[username]["login_history"].append({
+    users = load_user_data()
+    users[username]["login_history"].append({
         "timestamp": datetime.now().isoformat(),
         "ip_address": st.session_state.get("client_ip", "Unknown")
     })
-    save_user_data(user_data)
+    save_user_data(users)
 
 # 비밀번호 변경 함수
 def change_password():
@@ -73,10 +73,12 @@ def change_password():
     new_password = st.text_input("새 비밀번호", type="password")
     confirm_password = st.text_input("새 비밀번호 확인", type="password")
     if st.button("비밀번호 변경"):
-        if USERS[st.session_state.username]["password"] == current_password:
+        users = load_user_data()
+        if users[st.session_state.username]["password"] == hash_password(current_password):
             if new_password == confirm_password:
-                USERS[st.session_state.username]["password"] = new_password
+                users[st.session_state.username]["password"] = hash_password(new_password)
                 log_password_change(st.session_state.username)
+                save_user_data(users)
                 st.success("비밀번호가 성공적으로 변경되었습니다.")
             else:
                 st.error("새 비밀번호가 일치하지 않습니다.")
@@ -85,14 +87,12 @@ def change_password():
 
 # 비밀번호 변경 기록 함수
 def log_password_change(username):
-    user_data = load_user_data()
-    if username not in user_data:
-        user_data[username] = {"login_history": [], "password_changes": []}
-    user_data[username]["password_changes"].append({
+    users = load_user_data()
+    users[username]["password_changes"].append({
         "timestamp": datetime.now().isoformat(),
         "ip_address": st.session_state.get("client_ip", "Unknown")
     })
-    save_user_data(user_data)
+    save_user_data(users)
 
 # 관리자 페이지
 def admin_page():
@@ -104,8 +104,15 @@ def admin_page():
     new_password = st.text_input("새 사용자 비밀번호", type="password")
     if st.button("사용자 등록"):
         if new_username and new_password:
-            if new_username not in USERS:
-                USERS[new_username] = {"password": new_password, "is_admin": False}
+            users = load_user_data()
+            if new_username not in users:
+                users[new_username] = {
+                    "password": hash_password(new_password),
+                    "is_admin": False,
+                    "login_history": [],
+                    "password_changes": []
+                }
+                save_user_data(users)
                 st.success(f"사용자 {new_username}가 성공적으로 등록되었습니다.")
             else:
                 st.error("이미 존재하는 사용자 이름입니다.")
@@ -114,8 +121,8 @@ def admin_page():
     
     # 사용자 정보 조회
     st.subheader("사용자 정보 조회")
-    user_data = load_user_data()
-    for username, data in user_data.items():
+    users = load_user_data()
+    for username, data in users.items():
         st.write(f"사용자: {username}")
         st.write("로그인 이력:")
         for login in data["login_history"]:
@@ -124,6 +131,7 @@ def admin_page():
         for change in data["password_changes"]:
             st.write(f"  - {change['timestamp']} (IP: {change['ip_address']})")
         st.write("---")
+
 
 # 메인 애플리케이션
 def main_app():
