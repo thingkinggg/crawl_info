@@ -22,7 +22,11 @@ authenticator = stauth.Authenticate(
 )
 
 # 로그인 위젯 생성
-name, authentication_status, username = authenticator.login('Login', 'main')  # 'main'을 추가했습니다.
+authentication_status = None
+
+with st.form("login_form"):
+    name, authentication_status, username = authenticator.login('Login', 'main')
+    submitted = st.form_submit_button("Submit")
 
 # 인증 상태에 따른 처리
 if authentication_status:
