@@ -6,32 +6,21 @@ from datetime import datetime, timedelta
 
 st.set_page_config(layout="wide")
 
-# 사용자 정보
-users = {
-    "admin": "yc123",
-    "yc": "yc123"
-}
+PASSWORD = "ycenc1308"
 
 def login():
     st.title("🎈 지자체 크롤링 로그인")
-    
-    # ID와 패스워드 입력 필드
-    username = st.text_input("아이디를 입력하세요")
     password = st.text_input("비밀번호를 입력하세요", type="password")
-    
     if st.button("로그인"):
-        # 사용자 인증
-        if username in users and users[username] == password:
+        if password == PASSWORD:
             st.session_state.logged_in = True
-            st.session_state.username = username
             st.success("로그인 성공!")
-            st.experimental_rerun()  # 로그인 성공 후 화면 갱신
+            st.rerun()
         else:
-            st.error("아이디 또는 비밀번호가 올바르지 않습니다.")
+            st.error("비밀번호가 올바르지 않습니다.")
 
 def main_app():
     st.title("🎈 지자체 크롤링")
-    st.write(f"안녕하세요, {st.session_state.username}님!")
     st.write("2024년 10월 15일 22:33 업데이트\n")
     st.write("작업진행상황 : 102개 site 최신 1page 수집 작업 완료\n")
     st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
@@ -136,7 +125,7 @@ def main_app():
         combined_df_list['작성일'] = pd.to_datetime(combined_df_list['작성일'], errors='coerce')
         combined_df_list = combined_df_list.sort_values(by='작성일', ascending=False)
     
-        st.markdown(""" 
+        st.markdown("""
             <style>
             table {
                 width: 100%;
