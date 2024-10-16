@@ -1,0 +1,24 @@
+{
+    "credentials": {
+        "usernames": {
+            "admin": {
+                "name": "관리자",
+                "password": "$2b$12$Y7XGXgAJ5796z8u9wVQB3eSMG5as3T3hb.lEhLkpwpeRuatqL7xoe"
+            },
+            "yc": {
+                "name": "윤창이엔씨",
+                "password": "$2b$12$9iC1ZcExIv9/h7gf64vaC.SVffeRh80eOqjO0sYPxFvXm2bUBUaGu"
+            }
+        }
+    },
+    "cookie": {
+        "expiry_days": 30,
+        "key": "some_signature_key",
+        "name": "some_cookie_name"
+    },
+    "preauthorized": {
+        "emails": [
+            "melsby@gmail.com"
+        ]
+    }
+}
