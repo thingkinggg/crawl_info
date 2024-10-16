@@ -3,6 +3,7 @@ import pandas as pd
 import glob
 import os
 from datetime import datetime, timedelta
+from streamlit_javascript import st_javascript
 
 st.set_page_config(layout="wide")
 
@@ -25,8 +26,6 @@ def login():
 def log_access():
     ip = get_ip()
     access_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    user_agent = st.session_state.user_agent if 'user_agent' in st.session_state else 'unknown'
-    
     log_data = {
         "접속시간": [access_time],
         "IP 주소": [ip],
@@ -41,16 +40,6 @@ def log_access():
         log_df.to_csv("access_log.csv", mode='w', header=True, index=False)
     
     st.write(f"접속 기록: IP={ip}, 접속시간={access_time}, User Agent={user_agent}")
-
-# 사용자 IP 주소 가져오기
-def get_ip():
-    try:
-        # 외부 API를 사용하여 IP 주소 가져오기
-        ip_data = requests.get('https://api64.ipify.org?format=json').json()
-        return ip_data['ip']
-    except:
-        return 'Unknown'
-
 
 def main_app():
     st.title("🎈 지자체 크롤링")
@@ -205,26 +194,18 @@ def main_app():
     """
     st.text(log_text)
 
-    # 접속 이력 확인
-    st.subheader("접속 이력 기록")
-    
-    # access_log.csv 파일이 있는지 확인
-    log_file_path = "access_log.csv"
-    if os.path.exists(log_file_path):
-        # CSV 파일 읽기
-        log_df = pd.read_csv(log_file_path)
-        st.write("최근 접속 이력:")
-        st.dataframe(log_df)  # 데이터를 표 형태로 표시
-    else:
-        st.write("접속 이력 파일을 찾을 수 없습니다.")
+
+    # IP 주소 및 User Agent 수집
+    ip = st_javascript("fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => data.ip)")
+    user_agent = st_javascript("navigator.userAgent")
+
+    if ip and user_agent:
+        log_access(ip, user_agent)
+        
 
 # Main 실행 함수
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
-
-if 'user_agent' not in st.session_state:
-    # 브라우저의 User Agent 정보를 가져오기 위해 session_state에 저장
-    st.session_state.user_agent = st.experimental_get_query_params().get('user_agent', ['unknown'])[0]
 
 if not st.session_state.logged_in:
     login()
