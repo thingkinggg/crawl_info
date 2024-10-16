@@ -1,6 +1,5 @@
 import streamlit as st
-import yaml
-from yaml.loader import SafeLoader
+import json
 import streamlit_authenticator as stauth
 import pandas as pd
 import glob
@@ -10,9 +9,9 @@ from datetime import datetime, timedelta
 # 페이지 설정
 st.set_page_config(layout="wide")
 
-# YAML 파일에서 config 로드
-with open('config.yaml') as file:
-    config = yaml.load(file, Loader=SafeLoader)
+# JSON 파일에서 config 로드
+with open('config.json') as file:
+    config = json.load(file)
 
 # 인증자 생성
 authenticator = stauth.Authenticate(
@@ -191,22 +190,12 @@ if authentication_status:
             try:
                 if authenticator.reset_password(username, 'Reset password'):
                     st.success('Password modified successfully')
-                    with open('config.yaml', 'w') as file:
-                        yaml.dump(config, file, default_flow_style=False)
+                    with open('config.json', 'w') as file:
+                        json.dump(config, file, indent=4)
             except Exception as e:
-                st.error(e)
+                st.error(str(e))
 
 elif authentication_status == False:
     st.error('Username/password is incorrect')
 elif authentication_status == None:
     st.warning('Please enter your username and password')
-
-# 사용자 등록 (여기서는 비활성화되어 있음)
-# if authentication_status == None:
-#     try:
-#         if authenticator.register_user('Register user', preauthorization=False):
-#             st.success('User registered successfully')
-#             with open('config.yaml', 'w') as file:
-#                 yaml.dump(config, file, default_flow_style=False)
-#     except Exception as e:
-#         st.error(e)
