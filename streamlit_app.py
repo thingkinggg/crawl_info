@@ -22,7 +22,7 @@ authenticator = stauth.Authenticate(
 )
 
 # 로그인 위젯 생성
-name, authentication_status, username = authenticator.login('Login', 'main')
+name, authentication_status, username = authenticator.login('Login')
 
 # 인증 상태에 따른 처리
 if authentication_status:
