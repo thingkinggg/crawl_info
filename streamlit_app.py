@@ -21,8 +21,8 @@ def login():
 
 def main_app():
     st.title("🎈 지자체 크롤링")
-    st.write("2024년 10월 16일 22:33 업데이트\n")
-    st.write("작업진행상황 : 106개 site 최신 1page 수집 작업 완료\n")
+    st.write("2024년 10월 17일 22:33 업데이트\n")
+    st.write("작업진행상황 : 121개 site 최신 1page 수집 작업 완료\n")
     st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
     
     # 오늘 일자 및 최근 7일 계산
@@ -160,15 +160,31 @@ def main_app():
     # 중간 일배치 수집 로그 텍스트
     st.subheader("일배치 수집 로그")
     log_text = """
-    Processing rows:   0%|          | 0/103 [00:00<?, ?it/s]<ipython-input-1-b1a9e246c457>:94: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-      df.at[index, 'min_date'] = min_date
-    <ipython-input-1-b1a9e246c457>:95: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-      df.at[index, 'max_date'] = max_date
-    Processing rows:  42%|████▏     | 43/103 [04:42<07:58,  7.98s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
-    Processing rows:  46%|████▌     | 47/103 [04:50<03:09,  3.38s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
-    경기도_김포시페이지 정보를 추출할 수 없습니다.
-    Processing rows:  84%|████████▍ | 87/103 [10:51<02:32,  9.54s/it]강원도_정선군페이지 정보를 추출할 수 없습니다.
-    Processing rows: 100%|██████████| 103/103 [13:51<00:00,  8.07s/it]
+    Processing rows:   0%|          | 0/121 [00:00<?, ?it/s]<ipython-input-5-c0598249fa51>:98: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df.at[index, 'min_date'] = min_date
+<ipython-input-5-c0598249fa51>:99: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df.at[index, 'max_date'] = max_date
+Processing rows:  30%|██▉       | 36/121 [03:02<11:39,  8.24s/it]경기도_수원_권선구페이지 정보를 추출할 수 없습니다.
+Processing rows:  36%|███▌      | 43/121 [04:27<10:28,  8.06s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
+Processing rows:  39%|███▉      | 47/121 [04:34<03:54,  3.17s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
+경기도_김포시페이지 정보를 추출할 수 없습니다.
+Processing rows:  59%|█████▊    | 71/121 [08:01<07:29,  8.99s/it]읽기 타임아웃: 경기도_화성시 서버가 데이터를 제공하는 시간이 초과되었습니다.
+경기도_화성시페이지 정보를 추출할 수 없습니다.
+Processing rows:  81%|████████  | 98/121 [12:05<04:13, 11.04s/it]충청도_청주시_상당구페이지 정보를 추출할 수 없습니다.
+Processing rows:  86%|████████▌ | 104/121 [13:25<03:02, 10.75s/it]충청도_증평군페이지 정보를 추출할 수 없습니다.
+충청도_진천군페이지 정보를 추출할 수 없습니다.
+Processing rows:  90%|█████████ | 109/121 [14:30<03:28, 17.35s/it]충청도_당진시페이지 정보를 추출할 수 없습니다.
+Processing rows:  93%|█████████▎| 112/121 [14:43<01:37, 10.81s/it]읽기 타임아웃: 충청도_서산시 서버가 데이터를 제공하는 시간이 초과되었습니다.
+충청도_서산시페이지 정보를 추출할 수 없습니다.
+Processing rows:  94%|█████████▍| 114/121 [15:09<01:21, 11.67s/it]충청도_천안시페이지 정보를 추출할 수 없습니다.
+WARNING:urllib3.connection:Failed to parse headers (url=https://www.geumsan.go.kr:443/kr/html/sub03/030302.html): [MissingHeaderBodySeparatorDefect()], unparsed data: 'P3P : CP="NOI CURa ADMa DEVa TAIa OUR DELa BUS IND PHY ONL UNI COM NAV INT DEM PRE"\r\nSet-Cookie: SIDNAME=ronty; path=/; HttpOnly; secure; SameSite=None; secure\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nSet-Cookie: PHPSESSID=dgpfou9g469nkttln2oca623g1; path=/; HttpOnly; secure; SameSite=None\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\n\r\n'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/urllib3/connection.py", line 510, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/usr/local/lib/python3.10/dist-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'P3P : CP="NOI CURa ADMa DEVa TAIa OUR DELa BUS IND PHY ONL UNI COM NAV INT DEM PRE"\r\nSet-Cookie: SIDNAME=ronty; path=/; HttpOnly; secure; SameSite=None; secure\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nSet-Cookie: PHPSESSID=dgpfou9g469nkttln2oca623g1; path=/; HttpOnly; secure; SameSite=None\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\n\r\n'
+Processing rows: 100%|██████████| 121/121 [16:40<00:00,  8.27s/it]
     """
     st.text(log_text)
 
