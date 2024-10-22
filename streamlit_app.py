@@ -21,8 +21,8 @@ def login():
 
 def main_app():
     st.title("🎈 지자체 크롤링")
-    st.write("2024년 10월 21일 22:33 업데이트\n")
-    st.write("작업진행상황 : 128개 site 최신 1page 수집 작업 완료\n")
+    st.write("2024년 10월 22일 22:28 업데이트\n")
+    st.write("작업진행상황 : 133개 site 최신 1page 수집 작업 완료\n")
     st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
     
     # 오늘 일자 및 최근 7일 계산
@@ -160,25 +160,103 @@ def main_app():
     # 중간 일배치 수집 로그 텍스트
     st.subheader("일배치 수집 로그")
     log_text = """
-   Processing rows:  28%|██▊       | 36/129 [03:08<12:30,  8.07s/it]경기도_수원_권선구페이지 정보를 추출할 수 없습니다.
-Processing rows:  33%|███▎      | 43/129 [04:30<11:14,  7.84s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
-Processing rows:  36%|███▋      | 47/129 [04:37<04:19,  3.16s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
+   Processing rows:   0%|          | 0/133 [00:00<?, ?it/s]<ipython-input-5-81f668dc9787>:110: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df.at[index, 'min_date'] = min_date
+<ipython-input-5-81f668dc9787>:111: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df.at[index, 'max_date'] = max_date
+Processing rows:  32%|███▏      | 43/133 [04:25<11:53,  7.92s/it]경기도_광명시페이지 정보를 추출할 수 없습니다.
+Processing rows:  35%|███▌      | 47/133 [04:34<05:01,  3.51s/it]요청 오류: 417 Client Error: Expectation Failed for url: https://www.gimpo.go.kr/portal/ntfcPblancList.do?key=1004&cate_cd=1&searchCnd=40900000000
 경기도_김포시페이지 정보를 추출할 수 없습니다.
-Processing rows:  46%|████▌     | 59/129 [06:27<10:29,  9.00s/it]연결 타임아웃: 경기도_안성시 서버로부터 응답이 없습니다.
+Processing rows:  42%|████▏     | 56/133 [06:06<12:34,  9.80s/it]읽기 타임아웃: 경기도_안산시 서버가 데이터를 제공하는 시간이 초과되었습니다.
+경기도_안산시페이지 정보를 추출할 수 없습니다.
+Processing rows:  43%|████▎     | 57/133 [06:17<12:37,  9.97s/it]읽기 타임아웃: 경기도_안산시 상록구 서버가 데이터를 제공하는 시간이 초과되었습니다.
+경기도_안산시 상록구페이지 정보를 추출할 수 없습니다.
+Processing rows:  44%|████▎     | 58/133 [06:27<12:37, 10.09s/it]읽기 타임아웃: 경기도_안산시 단원구 서버가 데이터를 제공하는 시간이 초과되었습니다.
+경기도_안산시 단원구페이지 정보를 추출할 수 없습니다.
+Processing rows:  44%|████▍     | 59/133 [06:42<14:24, 11.68s/it]연결 타임아웃: 경기도_안성시 서버로부터 응답이 없습니다.
 경기도_안성시페이지 정보를 추출할 수 없습니다.
-Processing rows:  88%|████████▊ | 114/129 [15:45<03:21, 13.44s/it]WARNING:urllib3.connection:Failed to parse headers (url=https://www.geumsan.go.kr:443/kr/html/sub03/030302.html): [MissingHeaderBodySeparatorDefect()], unparsed data: 'P3P : CP="NOI CURa ADMa DEVa TAIa OUR DELa BUS IND PHY ONL UNI COM NAV INT DEM PRE"\r\nSet-Cookie: SIDNAME=ronty; path=/; HttpOnly; secure; SameSite=None; secure\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nSet-Cookie: PHPSESSID=5pb84ecdnrmqi2sb8kvt4fbht6; path=/; HttpOnly; secure; SameSite=None\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\n\r\n'
+Processing rows:  47%|████▋     | 62/133 [07:13<12:12, 10.31s/it]읽기 타임아웃: 경기도_여주시 서버가 데이터를 제공하는 시간이 초과되었습니다.
+경기도_여주시페이지 정보를 추출할 수 없습니다.
+Processing rows:  75%|███████▌  | 100/133 [13:10<07:31, 13.67s/it]WebDriverException occurred for 충청도_보은군: Message: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=130.0.6723.58)
+Stacktrace:
+#0 0x5d15d41120aa <unknown>
+#1 0x5d15d3c291a0 <unknown>
+#2 0x5d15d3c213a1 <unknown>
+#3 0x5d15d3c11b09 <unknown>
+#4 0x5d15d3c1383a <unknown>
+#5 0x5d15d3c11dbd <unknown>
+#6 0x5d15d3c1163c <unknown>
+#7 0x5d15d3c1152d <unknown>
+#8 0x5d15d3c0f5bc <unknown>
+#9 0x5d15d3c0fbfa <unknown>
+#10 0x5d15d3c2ba99 <unknown>
+#11 0x5d15d3cb93b5 <unknown>
+#12 0x5d15d3c99d82 <unknown>
+#13 0x5d15d3cb8866 <unknown>
+#14 0x5d15d3c99b23 <unknown>
+#15 0x5d15d3c68990 <unknown>
+#16 0x5d15d3c6996e <unknown>
+#17 0x5d15d40de16b <unknown>
+#18 0x5d15d40e1f68 <unknown>
+#19 0x5d15d40cb64c <unknown>
+#20 0x5d15d40e2ae7 <unknown>
+#21 0x5d15d40b04af <unknown>
+#22 0x5d15d41004f8 <unknown>
+#23 0x5d15d41006c0 <unknown>
+#24 0x5d15d4110f26 <unknown>
+#25 0x7e6e40b4eac3 <unknown>
+. Retrying 1/2...
+WebDriverException occurred for 충청도_보은군: Message: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=130.0.6723.58)
+Stacktrace:
+#0 0x5a83d56c70aa <unknown>
+#1 0x5a83d51de1a0 <unknown>
+#2 0x5a83d51d63a1 <unknown>
+#3 0x5a83d51c6b09 <unknown>
+#4 0x5a83d51c883a <unknown>
+#5 0x5a83d51c6dbd <unknown>
+#6 0x5a83d51c663c <unknown>
+#7 0x5a83d51c652d <unknown>
+#8 0x5a83d51c45bc <unknown>
+#9 0x5a83d51c4bfa <unknown>
+#10 0x5a83d51e0a99 <unknown>
+#11 0x5a83d526e3b5 <unknown>
+#12 0x5a83d524ed82 <unknown>
+#13 0x5a83d526d866 <unknown>
+#14 0x5a83d524eb23 <unknown>
+#15 0x5a83d521d990 <unknown>
+#16 0x5a83d521e96e <unknown>
+#17 0x5a83d569316b <unknown>
+#18 0x5a83d5696f68 <unknown>
+#19 0x5a83d568064c <unknown>
+#20 0x5a83d5697ae7 <unknown>
+#21 0x5a83d56654af <unknown>
+#22 0x5a83d56b54f8 <unknown>
+#23 0x5a83d56b56c0 <unknown>
+#24 0x5a83d56c5f26 <unknown>
+#25 0x7c7bbe21fac3 <unknown>
+. Retrying 2/2...
+Processing rows:  76%|███████▌  | 101/133 [14:15<15:36, 29.26s/it]Failed to crawl 충청도_보은군 after 2 retries.
+Processing rows:  78%|███████▊  | 104/133 [14:51<08:21, 17.29s/it]읽기 타임아웃: 충청도_음성군 서버가 데이터를 제공하는 시간이 초과되었습니다.
+충청도_음성군페이지 정보를 추출할 수 없습니다.
+Processing rows:  84%|████████▍ | 112/133 [18:29<07:32, 21.56s/it]읽기 타임아웃: 충청도_서산시 서버가 데이터를 제공하는 시간이 초과되었습니다.
+충청도_서산시페이지 정보를 추출할 수 없습니다.
+Processing rows:  86%|████████▌ | 114/133 [18:56<05:28, 17.30s/it]충청도_천안시페이지 정보를 추출할 수 없습니다.
+WARNING:urllib3.connection:Failed to parse headers (url=https://www.geumsan.go.kr:443/kr/html/sub03/030302.html): [MissingHeaderBodySeparatorDefect()], unparsed data: 'P3P : CP="NOI CURa ADMa DEVa TAIa OUR DELa BUS IND PHY ONL UNI COM NAV INT DEM PRE"\r\nSet-Cookie: SIDNAME=ronty; path=/; HttpOnly; secure; SameSite=None; secure\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nSet-Cookie: PHPSESSID=9li9limddcltcdgj36vb0tkon3; path=/; HttpOnly; secure; SameSite=None\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\n\r\n'
 Traceback (most recent call last):
   File "/usr/local/lib/python3.10/dist-packages/urllib3/connection.py", line 510, in getresponse
     assert_header_parsing(httplib_response.msg)
   File "/usr/local/lib/python3.10/dist-packages/urllib3/util/response.py", line 88, in assert_header_parsing
     raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
-urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'P3P : CP="NOI CURa ADMa DEVa TAIa OUR DELa BUS IND PHY ONL UNI COM NAV INT DEM PRE"\r\nSet-Cookie: SIDNAME=ronty; path=/; HttpOnly; secure; SameSite=None; secure\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nSet-Cookie: PHPSESSID=5pb84ecdnrmqi2sb8kvt4fbht6; path=/; HttpOnly; secure; SameSite=None\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\n\r\n'
-Processing rows:  95%|█████████▍| 122/129 [17:16<01:34, 13.52s/it]전라도_군산시페이지 정보를 추출할 수 없습니다.
-Processing rows:  96%|█████████▌| 124/129 [17:19<00:36,  7.28s/it]요청 오류: 400 Client Error: Bad Request for url: https://www.namwon.go.kr/board/post/list.do?boardUid=ff8080818ea1fec5018ea24137680031&menuUid=ff8080818e3beff0018e4077131b007a&beginDateStr=&endDateStr=&searchType=postTtl&keyword=%EC%A0%9C%EC%95%88&paramString=Us7WVBAxc13kgzv1JU3ayAslPphGSM%2FmlfdB4qtWC4OBeJsElaKmGl7kvQ4Au%2B3O&size=10
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'P3P : CP="NOI CURa ADMa DEVa TAIa OUR DELa BUS IND PHY ONL UNI COM NAV INT DEM PRE"\r\nSet-Cookie: SIDNAME=ronty; path=/; HttpOnly; secure; SameSite=None; secure\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nSet-Cookie: PHPSESSID=9li9limddcltcdgj36vb0tkon3; path=/; HttpOnly; secure; SameSite=None\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\n\r\n'
+Processing rows:  92%|█████████▏| 122/133 [20:50<02:52, 15.65s/it]전라도_군산시페이지 정보를 추출할 수 없습니다.
+Processing rows:  93%|█████████▎| 124/133 [20:52<01:14,  8.33s/it]요청 오류: 400 Client Error: Bad Request for url: https://www.namwon.go.kr/board/post/list.do?boardUid=ff8080818ea1fec5018ea24137680031&menuUid=ff8080818e3beff0018e4077131b007a&beginDateStr=&endDateStr=&searchType=postTtl&keyword=%EC%A0%9C%EC%95%88&paramString=Us7WVBAxc13kgzv1JU3ayAslPphGSM%2FmlfdB4qtWC4OBeJsElaKmGl7kvQ4Au%2B3O&size=10
 전라도_남원시페이지 정보를 추출할 수 없습니다.
-Processing rows:  98%|█████████▊| 126/129 [17:59<00:39, 13.24s/it]연결 타임아웃: 전라도_전주시 서버로부터 응답이 없습니다.
+Processing rows:  95%|█████████▍| 126/133 [22:06<02:25, 20.83s/it]연결 타임아웃: 전라도_전주시 서버로부터 응답이 없습니다.
 전라도_전주시페이지 정보를 추출할 수 없습니다.
-Processing rows: 100%|██████████| 129/129 [18:38<00:00,  8.67s/it]cleaned_dates 리스트가 비어 있습니다.
+Processing rows:  97%|█████████▋| 129/133 [22:41<00:58, 14.63s/it]cleaned_dates 리스트가 비어 있습니다.
+Processing rows: 100%|██████████| 133/133 [23:47<00:00, 10.73s/it]전라도_임실군페이지 정보를 추출할 수 없습니다.
     """
     st.text(log_text)
 
