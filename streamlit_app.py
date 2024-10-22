@@ -21,7 +21,8 @@ def login():
 
 def main_app():
     st.title("🎈 지자체 크롤링")
-    st.write("2024년 10월 22일 22:28 업데이트\n")
+    update_time = st.session_state.get('update_time', "2024년 10월 22일 22:28 업데이트")
+    st.write(f"{update_time}\n")
     st.write("작업진행상황 : 133개 site 최신 1page 수집 작업 완료\n")
     st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
     
@@ -157,10 +158,9 @@ def main_app():
     else:
         st.write("최근 일주일 내에 df_list 파일을 찾을 수 없습니다.")
     
-    # 중간 일배치 수집 로그 텍스트
-    st.subheader("일배치 수집 로그")
+   # 중간 일배치 수집 로그 텍스트 관리
     log_text = """
-   Processing rows:   0%|          | 0/133 [00:00<?, ?it/s]<ipython-input-5-81f668dc9787>:110: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+    Processing rows:   0%|          | 0/133 [00:00<?, ?it/s]<ipython-input-5-81f668dc9787>:110: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2023-03-17' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'min_date'] = min_date
 <ipython-input-5-81f668dc9787>:111: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2024-09-03' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
   df.at[index, 'max_date'] = max_date
@@ -258,6 +258,11 @@ Processing rows:  95%|█████████▍| 126/133 [22:06<02:25, 20.8
 Processing rows:  97%|█████████▋| 129/133 [22:41<00:58, 14.63s/it]cleaned_dates 리스트가 비어 있습니다.
 Processing rows: 100%|██████████| 133/133 [23:47<00:00, 10.73s/it]전라도_임실군페이지 정보를 추출할 수 없습니다.
     """
+    
+    # 변경된 로그 텍스트를 세션 상태에 저장 (처음 실행 시)
+    if 'log_text' not in st.session_state:
+        st.session_state.log_text = log_text
+        
     st.text(log_text)
 
 # 메인 실행 흐름
@@ -267,4 +272,7 @@ if 'logged_in' not in st.session_state:
 if not st.session_state.logged_in:
     login()
 else:
+    if 'update_time' not in st.session_state:
+        st.session_state.update_time = "2024년 10월 22일 22:28 업데이트"  # 원하는 시간으로 변경
+    
     main_app()
