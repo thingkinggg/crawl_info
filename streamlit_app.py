@@ -204,6 +204,5 @@ if 'logged_in' not in st.session_state:
 if not st.session_state.logged_in:
     login()
 else:
-        st.session_state.update_time = "2024년 10월 23일 22:28 업데이트"  # 원하는 시간으로 변경
-    
+    st.session_state.update_time = "2024년 10월 23일 22:28 업데이트"  # 원하는 시간으로 변경
     main_app()
