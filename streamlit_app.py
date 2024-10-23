@@ -192,9 +192,8 @@ Processing rows:  97%|█████████▋| 129/133 [19:13<00:46, 11.6
 Processing rows: 100%|██████████| 133/133 [20:02<00:00,  9.04s/it]전라도_임실군페이지 정보를 추출할 수 없습니다.
     """
     
-    # 변경된 로그 텍스트를 세션 상태에 저장 (처음 실행 시)
-    if 'log_text' not in st.session_state:
-        st.session_state.log_text = log_text
+
+    st.session_state.log_text = log_text
         
     st.text(log_text)
 
@@ -205,7 +204,6 @@ if 'logged_in' not in st.session_state:
 if not st.session_state.logged_in:
     login()
 else:
-    if 'update_time' not in st.session_state:
         st.session_state.update_time = "2024년 10월 23일 22:28 업데이트"  # 원하는 시간으로 변경
     
     main_app()
