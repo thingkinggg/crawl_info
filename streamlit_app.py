@@ -25,7 +25,7 @@ def main_app():
     st.title("🎈 지자체 크롤링")
     update_time = st.session_state.get('update_time', "2024년 10월 24일 22:28 업데이트")
     st.write(f"{update_time}\n")
-    st.write("작업진행상황 : 135개 site 최신 1page 수집 작업 완료\n")
+    st.write("작업진행상황 : 136개 site 최신 1page 수집 작업 완료\n")
     st.write("향후진행계획 : 나머지 site 최신 페이지 수집, 수집실패사이트점검, 2page이상 수집하도록 변경")
     
     # 오늘 일자 및 최근 7일 계산
@@ -209,5 +209,4 @@ if 'logged_in' not in st.session_state:
 if not st.session_state.logged_in:
     login()
 else:
-    st.session_state.update_time = "2024년 10월 24일 22:28 업데이트"  # 원하는 시간으로 변경
     main_app()
