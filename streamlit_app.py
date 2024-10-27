@@ -15,9 +15,6 @@ def login():
         if password == PASSWORD:
             st.session_state.logged_in = True
             st.success("로그인 성공!")
-            # rerun을 안전하게 호출하기 위해 사용
-            st.experimental_set_query_params(logged_in=True)
-            st.experimental_rerun()  # 로그인 성공 후 새로고침
         else:
             st.error("비밀번호가 올바르지 않습니다.")
 
