@@ -95,7 +95,7 @@ def main_app():
         
         today_str = today.strftime('%Y-%m-%d')
         max_date_recent = df_merged['max_date_recent'].max()
-        problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == max_date_recent))]
+        problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == max_date_recent))|(df_merged['unique_date_recent'] == 0)]
         
         if not problematic_rows.empty:
             st.warning(f"덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
