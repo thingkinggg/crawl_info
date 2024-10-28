@@ -74,7 +74,6 @@ def main_app():
             combined_df_log = pd.DataFrame()
             for file_path in df_log_files:
                 df = pd.read_excel(file_path, engine='openpyxl')
-                df['파일명'] = os.path.basename(file_path)
                 combined_df_log = pd.concat([combined_df_log, df], ignore_index=True)
             
             # Check problematic rows
