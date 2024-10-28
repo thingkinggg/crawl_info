@@ -63,48 +63,37 @@ def main_app():
         return sorted(recent_files, reverse=True)
     
     # df_log 파일 읽기
-    recent_file_path, previous_file_path = get_two_recent_files('df_log')
-    
-    # 최근 파일 처리
-    if recent_file_path:
-        df_log_recent = pd.read_excel(recent_file_path, engine='openpyxl')
-        st.write(f" - 최근 df_log 파일: {recent_file_path}에서 데이터를 읽었습니다.")
-    else:
-        st.write(" - 최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
-    
-    # 이전 파일 처리
-    if previous_file_path:
-        df_log_previous = pd.read_excel(previous_file_path, engine='openpyxl')
-        st.write(f" - 이전 df_log 파일: {previous_file_path}에서 데이터를 읽었습니다.")
-    else:
-        st.write(" - 이전 df_log 파일을 찾을 수 없습니다.")
-    
-    # df_log 파일 처리
-    if recent_file_path and previous_file_path:
-        merge_columns = ['URL', 'unique_date', 'max_date']
-        df_merged = pd.merge(df_log_recent, 
-                             df_log_previous[merge_columns], 
-                             on='URL', 
-                             suffixes=('_recent', '_previous'), 
-                             how='left')
+    recent_file_path, previous_file_path = get_recent_files('df_log')
+
+    if df_log_file_paths:
+        df_logs = []
+        for file_path in df_log_file_paths:
+            df = pd.read_excel(file_path, engine='openpyxl')
+            df['파일명'] = os.path.basename(file_path)
+            df['링크'] = f'<a href="df_log_files/{df["파일명"].iloc[0]}" target="_blank">{os.path.basename(file_path)}</a>'
+            df_logs.append(df)
         
-        st.write("최근 파일과 이전 파일을 left join한 데이터:")
-        st.dataframe(df_merged, use_container_width=True)
-    
-        df_merged['max_date_recent'] = pd.to_datetime(df_merged['max_date_recent'], errors='coerce')
+        # Combine all logs into one DataFrame
+        combined_df_log = pd.concat(df_logs, ignore_index=True)
         
-        today_str = today.strftime('%Y-%m-%d')
-        max_date_recent = df_merged['max_date_recent'].max()
-        problematic_rows = df_merged[(df_merged['unique_date_recent'].isnull()) | ((df_merged['unique_date_recent'] == 1) & (df_merged['max_date_recent'] == max_date_recent))|(df_merged['unique_date_recent'] == 0)]
-        
-        if not problematic_rows.empty:
-            st.warning(f"덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
-            st.write("확인해야 할 사이트:")
-            st.dataframe(problematic_rows, use_container_width=True)
+        # Check problematic rows
+        problematic_rows = combined_df_log[
+            (combined_df_log['unique_date'].isnull()) | (combined_df_log['unique_date'] == 1)
+        ]
+
+        # Display results
+            if not problematic_rows.empty:
+                st.warning(f"덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
+                st.write("확인해야 할 사이트:")
+                # Show table with clickable links
+                problematic_rows['파일명'] = problematic_rows['파일명'].apply(
+                    lambda x: f'<a href="{x}" target="_blank">{x}</a>'
+                )
+                st.markdown(problematic_rows.to_html(escape=False), unsafe_allow_html=True)
+            else:
+                st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
         else:
-            st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
-    else:
-        st.write("비교를 위해 이전 파일과 최근 파일이 모두 필요합니다.")
+            st.write("최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
     
     # df_list 파일 읽기 및 처리
     df_list_file_paths = get_recent_files('df_list')
