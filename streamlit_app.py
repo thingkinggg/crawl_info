@@ -27,7 +27,7 @@ def main_app():
     
     # 오늘 일자 및 최근 7일 계산
     today = datetime.today()
-    one_week_ago = today - timedelta(days=7)
+    one_week_ago = today - timedelta(days=8)
     today_str = today.strftime('%Y%m%d')
     
    # 특정 접두사를 가지는 최근 파일들을 반환하는 함수
