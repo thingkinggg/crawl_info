@@ -79,7 +79,7 @@ def main_app():
             
             # Check problematic rows
             problematic_rows = combined_df_log[
-                (combined_df_log['unique_date'].isnull()) | (combined_df_log['unique_date'] == 1 | (combined_df_log['unique_date'] == 0)
+                (combined_df_log['unique_date'].isnull()) | (combined_df_log['unique_date'] == 1) | (combined_df_log['unique_date'] == 0)
             ]
             
             if not problematic_rows.empty:
