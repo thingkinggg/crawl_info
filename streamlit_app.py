@@ -82,18 +82,18 @@ def main_app():
         ]
 
         # Display results
-            if not problematic_rows.empty:
-                st.warning(f"덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
-                st.write("확인해야 할 사이트:")
-                # Show table with clickable links
-                problematic_rows['파일명'] = problematic_rows['파일명'].apply(
-                    lambda x: f'<a href="{x}" target="_blank">{x}</a>'
-                )
-                st.markdown(problematic_rows.to_html(escape=False), unsafe_allow_html=True)
-            else:
-                st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
+        if not problematic_rows.empty:
+            st.warning(f"덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
+            st.write("확인해야 할 사이트:")
+            # Show table with clickable links
+            problematic_rows['파일명'] = problematic_rows['파일명'].apply(
+                lambda x: f'<a href="{x}" target="_blank">{x}</a>'
+            )
+            st.markdown(problematic_rows.to_html(escape=False), unsafe_allow_html=True)
         else:
-            st.write("최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
+            st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
+    else:
+        st.write("최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
     
     # df_list 파일 읽기 및 처리
     df_list_file_paths = get_recent_files('df_list')
