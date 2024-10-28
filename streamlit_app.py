@@ -78,7 +78,7 @@ def main_app():
         
         # Check problematic rows
         problematic_rows = combined_df_log[
-        (combined_df_log['unique_date_recent'].isnull()) | ((combined_df_log['unique_date_recent'] == 1) & (combined_df_log['max_date_recent'] == max_date_recent))|(combined_df_log['unique_date_recent'] == 0)
+        (combined_df_log['unique_date'].isnull()) | ((combined_df_log['unique_date'] == 1) & (combined_df_log['max_date'] == max_date_recent))|(combined_df_log['unique_date'] == 0)
         ]
 
         # Display results
