@@ -30,23 +30,19 @@ def main_app():
     one_week_ago = today - timedelta(days=7)
     today_str = today.strftime('%Y%m%d')
     
-    # 최근 파일 2개를 반환하는 함수
-    def get_two_recent_files(file_prefix):
+   # 특정 접두사를 가지는 최근 파일들을 반환하는 함수
+    def get_recent_files_by_date(file_prefix):
         files = glob.glob(f"{file_prefix}_*.xlsx")
-        recent_files = []
+        file_dates = []
         for file in files:
             file_date_str = file.split('_')[-1].replace('.xlsx', '')
             try:
                 file_date = datetime.strptime(file_date_str, '%Y%m%d')
                 if one_week_ago <= file_date <= today:
-                    recent_files.append(file)
+                    file_dates.append(file_date_str)
             except ValueError:
                 continue
-        if len(recent_files) >= 2:
-            return sorted(recent_files, reverse=True)[:2]
-        elif len(recent_files) == 1:
-            return recent_files[0], None
-        return None, None
+        return sorted(set(file_dates), reverse=True)
     
     # 최근 일주일 내의 파일을 읽어오기 위한 함수
     def get_recent_files(file_prefix):
@@ -62,36 +58,38 @@ def main_app():
                 continue
         return sorted(recent_files, reverse=True)
     
-    # df_log 파일 읽기
-    df_log_file_paths = get_recent_files('df_log')
-
-    if df_log_file_paths:
-        df_logs = []
-        for file_path in df_log_file_paths:
-            df = pd.read_excel(file_path, engine='openpyxl')
-            df['파일명'] = os.path.basename(file_path)
-            df['링크'] = f'<a href="df_log_files/{df["파일명"].iloc[0]}" target="_blank">{os.path.basename(file_path)}</a>'
-            df_logs.append(df)
+    # df_log 파일에서 최근 날짜 목록을 가져오기
+    available_dates = get_recent_files_by_date('df_log')
+    
+    if available_dates:
+        # 사용자가 선택한 날짜에 따른 파일 목록 표시
+        selected_date = st.selectbox("날짜를 선택하세요", available_dates)
         
-        # Combine all logs into one DataFrame
-        combined_df_log = pd.concat(df_logs, ignore_index=True)
+        # 선택된 날짜에 해당하는 df_log 파일 읽기
+        df_log_files = glob.glob(f"df_log_{selected_date}.xlsx")
         
-        # Check problematic rows
-        problematic_rows = combined_df_log[
-        (combined_df_log['unique_date'].isnull()) | (combined_df_log['unique_date'] == 1)|(combined_df_log['unique_date'] == 0)
-        ]
-
-        # Display results
-        if not problematic_rows.empty:
-            st.warning(f"덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
-            st.write("확인해야 할 사이트:")
-            # Show table with clickable links
-            problematic_rows['파일명'] = problematic_rows['파일명'].apply(
-                lambda x: f'<a href="{x}" target="_blank">{x}</a>'
-            )
-            st.markdown(problematic_rows.to_html(escape=False), unsafe_allow_html=True)
+        if df_log_files:
+            st.write(f"선택한 날짜: {selected_date}")
+            
+            combined_df_log = pd.DataFrame()
+            for file_path in df_log_files:
+                df = pd.read_excel(file_path, engine='openpyxl')
+                df['파일명'] = os.path.basename(file_path)
+                combined_df_log = pd.concat([combined_df_log, df], ignore_index=True)
+            
+            # Check problematic rows
+            problematic_rows = combined_df_log[
+                (combined_df_log['unique_date'].isnull()) | (combined_df_log['unique_date'] == 1 | (combined_df_log['unique_date'] == 0)
+            ]
+            
+            if not problematic_rows.empty:
+                st.warning(f"선택한 날짜({selected_date})에 덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
+                st.write("확인해야 할 사이트:")
+                st.dataframe(problematic_rows, use_container_width=True)
+            else:
+                st.success(f"선택한 날짜({selected_date})에는 unique_date가 Null이거나 1인 데이터가 없습니다.")
         else:
-            st.success("unique_date가 Null이거나 1인 데이터가 없습니다.")
+            st.write(f"선택한 날짜({selected_date})에 해당하는 df_log 파일을 찾을 수 없습니다.")
     else:
         st.write("최근 일주일 내에 df_log 파일을 찾을 수 없습니다.")
     
