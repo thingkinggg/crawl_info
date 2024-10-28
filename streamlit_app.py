@@ -63,7 +63,7 @@ def main_app():
         return sorted(recent_files, reverse=True)
     
     # df_log 파일 읽기
-    recent_file_path, previous_file_path = get_recent_files('df_log')
+    df_log_file_paths = get_recent_files('df_log')
 
     if df_log_file_paths:
         df_logs = []
@@ -78,7 +78,7 @@ def main_app():
         
         # Check problematic rows
         problematic_rows = combined_df_log[
-            (combined_df_log['unique_date'].isnull()) | (combined_df_log['unique_date'] == 1)
+        (combined_df_log['unique_date_recent'].isnull()) | ((combined_df_log['unique_date_recent'] == 1) & (combined_df_log['max_date_recent'] == max_date_recent))|(combined_df_log['unique_date_recent'] == 0)
         ]
 
         # Display results
