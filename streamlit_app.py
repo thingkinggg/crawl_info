@@ -178,6 +178,8 @@ def main_app():
                 }
                 #df-list-table td:nth-child(5), #df-list-table th:nth-child(5) {  /* 두 번째 열 */
                     width: 10px;  /* 두 번째 열의 너비 설정 */
+                    max-width: 10px;  /* 첫 번째 열의 최대 너비 설정 */
+                    overflow: hidden;  /* 내용이 넘칠 경우 숨김 */
                 }
             </style>
         """, unsafe_allow_html=True)
