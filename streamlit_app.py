@@ -104,10 +104,10 @@ def main_app():
                             max-width: 200px;  /* 기본적으로 열의 최대 폭 설정 */
                             overflow-wrap: break-word;
                         }
-                        td:nth-child(3), th:nth-child(3) {  /* unique_date 열 (두 번째 열) */
+                        td:nth-child(4), th:nth-child(4) {  /* unique_date 열 (두 번째 열) */
                             width: 20px;  /* 열의 너비 설정 */
                         }
-                        td:nth-child(4), th:nth-child(4) {  /* max_date 열 (세 번째 열) */
+                        td:nth-child(5), th:nth-child(5) {  /* max_date 열 (세 번째 열) */
                             width: 20px;  /* 열의 너비 설정 */
                         }
                     </style>
