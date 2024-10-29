@@ -87,6 +87,32 @@ def main_app():
                 st.write("확인해야 할 사이트:")
                 # URL 컬럼에 하이퍼링크 추가
                 problematic_rows['URL'] = problematic_rows['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
+                # CSS 스타일을 사용하여 특정 열의 너비를 조정합니다.
+                st.markdown("""
+                    <style>
+                        table {
+                            width: 100%;
+                        }
+                        th, td {
+                            padding: 5px;
+                        }
+                        th {
+                            text-align: left;
+                        }
+                        td {
+                            max-width: 200px;  /* 기본적으로 열의 최대 폭 설정 */
+                            overflow-wrap: break-word;
+                        }
+                        td:nth-child(2), th:nth-child(2) {  /* unique_date 열 (두 번째 열) */
+                            width: 80px;  /* 열의 너비 설정 */
+                        }
+                        td:nth-child(3), th:nth-child(3) {  /* max_date 열 (세 번째 열) */
+                            width: 100px;  /* 열의 너비 설정 */
+                        }
+                    </style>
+                """, unsafe_allow_html=True)
+                
+                # 데이터프레임을 HTML로 렌더링
                 st.markdown(problematic_rows.to_html(escape=False), unsafe_allow_html=True)
             else:
                 st.success(f"선택한 날짜({selected_date})에는 unique_date가 Null이거나 1인 데이터가 없습니다.")
