@@ -147,35 +147,49 @@ def main_app():
         combined_df_list['작성일'] = pd.to_datetime(combined_df_list['작성일'], errors='coerce')
         combined_df_list = combined_df_list.sort_values(by='작성일', ascending=False)
     
+        # "df_list 파일" 테이블에 대한 CSS 스타일을 정의합니다.
         st.markdown("""
             <style>
-            table {
-                width: 100%;
-            }
-            th, td {
-                padding: 5px;
-            }
-            th {
-                text-align: left;
-            }
-            td {
-                max-width: 200px;
-                overflow-wrap: break-word;
-            }
+                #df-list-table {
+                    width: 100%;
+                }
+                #df-list-table th, #df-list-table td {
+                    padding: 5px;
+                }
+                #df-list-table th {
+                    text-align: left;
+                }
+                #df-list-table td {
+                    max-width: 250px;  /* 열의 최대 폭 설정 */
+                    overflow-wrap: break-word;
+                }
+                #df-list-table td:nth-child(1), #df-list-table th:nth-child(1) {  /* 첫 번째 열 */
+                    width: 10px;  /* 첫 번째 열의 너비 설정 */
+                }
+                #df-list-table td:nth-child(2), #df-list-table th:nth-child(2) {  /* 두 번째 열 */
+                    width: 10px;  /* 두 번째 열의 너비 설정 */
+                }
+                #df-list-table td:nth-child(3), #df-list-table th:nth-child(3) {  /* 두 번째 열 */
+                    width: 20px;  /* 두 번째 열의 너비 설정 */
+                }
+                #df-list-table td:nth-child(6), #df-list-table th:nth-child(6) {  /* 두 번째 열 */
+                    width: 10px;  /* 두 번째 열의 너비 설정 */
+                }
             </style>
         """, unsafe_allow_html=True)
-        
+    
         st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
-        
+    
         search_keyword = st.text_input("df_list 파일에서 검색할 키워드를 입력하세요")
     
         if search_keyword:
             search_results = combined_df_list[combined_df_list['제목'].str.contains(search_keyword, na=False)]
             st.write(f"'{search_keyword}' 검색 결과:")
-            st.markdown(search_results.to_html(escape=False), unsafe_allow_html=True)
+            st.markdown(search_results.to_html(escape=False, index=False, table_id="df-list-table"), unsafe_allow_html=True)
         else:
             st.write("df_list 파일의 전체 데이터:")
-            st.markdown(combined_df_list.to_html(escape=False), unsafe_allow_html=True)
+            st.markdown(combined_df_list.to_html(escape=False, index=False, table_id="df-list-table"), unsafe_allow_html=True)
+
     else:
         st.write("최근 일주일 내에 df_list 파일을 찾을 수 없습니다.")
     
