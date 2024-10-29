@@ -15,8 +15,7 @@ def login():
         if password == PASSWORD:
             st.session_state.logged_in = True
             st.success("로그인 성공!")
-            st.experimental_set_query_params(logged_in=True)  # 쿼리 파라미터를 통해 세션 변화 유도
-            st.experimental_rerun()
+            
         else:
             st.error("비밀번호가 올바르지 않습니다.")
 
@@ -202,5 +201,4 @@ if 'logged_in' not in st.session_state:
 if not st.session_state.logged_in:
     login()
 else:
-    st.session_state.update_time = "2024년 10월 29일 22:28 업데이트"  # 원하는 시간으로 변경
     main_app()
