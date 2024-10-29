@@ -175,7 +175,7 @@ def main_app():
                 #df-list-table td:nth-child(3), #df-list-table th:nth-child(3) {  /* 두 번째 열 */
                     width: 20px;  /* 두 번째 열의 너비 설정 */
                 }
-                #df-list-table td:nth-child(6), #df-list-table th:nth-child(6) {  /* 두 번째 열 */
+                #df-list-table td:nth-child(6), #df-list-table th:nth-child(5) {  /* 두 번째 열 */
                     width: 10px;  /* 두 번째 열의 너비 설정 */
                 }
             </style>
