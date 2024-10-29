@@ -104,6 +104,9 @@ def main_app():
                             max-width: 200px;  /* 기본적으로 열의 최대 폭 설정 */
                             overflow-wrap: break-word;
                         }
+                        td:nth-child(2), th:nth-child(2) {  /* unique_date 열 (두 번째 열) */
+                            width: 20px;  /* 열의 너비 설정 */
+                        }
                         td:nth-child(4), th:nth-child(4) {  /* unique_date 열 (두 번째 열) */
                             width: 20px;  /* 열의 너비 설정 */
                         }
