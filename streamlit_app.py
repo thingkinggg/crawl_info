@@ -159,8 +159,10 @@ def main_app():
                     text-align: left;
                 }
                 #df-list-table td {
-                    max-width: 250px;  /* 열의 최대 폭 설정 */
+                    max-width: 50px;  /* 열의 최대 폭 설정 */
+                    width: 50px;  /* 열의 너비 설정 */
                     overflow-wrap: break-word;
+                    word-wrap: break-word;  /* 단어를 잘라서 줄바꿈 */
                 }
                 #df-list-table td:nth-child(1), #df-list-table th:nth-child(1) {  /* 첫 번째 열 */
                     width: 5px;  /* 첫 번째 열의 너비 설정 */
