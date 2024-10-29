@@ -85,7 +85,9 @@ def main_app():
             if not problematic_rows.empty:
                 st.warning(f"선택한 날짜({selected_date})에 덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
                 st.write("확인해야 할 사이트:")
-                st.dataframe(problematic_rows, use_container_width=True)
+                # URL 컬럼에 하이퍼링크 추가
+                problematic_rows['URL'] = problematic_rows['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
+                st.markdown(problematic_rows.to_html(escape=False), unsafe_allow_html=True)
             else:
                 st.success(f"선택한 날짜({selected_date})에는 unique_date가 Null이거나 1인 데이터가 없습니다.")
         else:
