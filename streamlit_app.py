@@ -15,7 +15,8 @@ def login():
         if password == PASSWORD:
             st.session_state.logged_in = True
             st.success("로그인 성공!")
-            
+            # 화면을 새로고침하여 메인 화면으로 전환
+            st.experimental_rerun()            
         else:
             st.error("비밀번호가 올바르지 않습니다.")
 
