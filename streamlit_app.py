@@ -22,7 +22,7 @@ def login():
 
 def main_app():
     st.title("🎈 지자체 크롤링")
-    update_time = st.session_state.get('update_time', "2024년 11월 01일 21:28 업데이트")
+    update_time = st.session_state.get('update_time', "2024년 11월 03일 21:28 업데이트")
     st.write(f"{update_time}\n")
     st.write("작업진행상황 : 1page 수집 작업 완료(1차완료) \n")
     st.write("향후진행계획 : 2page이상 수집(8개 site)")
