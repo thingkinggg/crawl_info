@@ -23,6 +23,7 @@ def login():
 def main_app():
     st.title("🎈 지자체 크롤링")
     st.write("2024년 11월 03일 21:28 업데이트")
+    st.write("문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
     st.write("작업진행상황 : 1page 수집 작업 완료(1차완료) \n")
     st.write("향후진행계획 : 2page이상 수집(8개 site)")
     
@@ -183,7 +184,7 @@ def main_app():
             </style>
         """, unsafe_allow_html=True)
     
-        st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
+        st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.\n 포함 키워드 : 특허, 제안, 심의")
     
         search_keyword = st.text_input("df_list 파일에서 검색할 키워드를 입력하세요")
     
