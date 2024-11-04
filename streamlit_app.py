@@ -26,7 +26,7 @@ def main_app():
     st.write("2024년 11월 03일 21:28 업데이트")
     st.write("문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
     # 버튼 클릭 시 Google 스프레드시트로 이동
-    if st.button("진행현황 확인하기 : 🚀 (옆 그림 클릭)"):
+    if st.button("진행현황 확인하기 : 🚀"):
         webbrowser.open_new_tab("https://docs.google.com/spreadsheets/d/1t7rp43AJtoGFSpPwUPAkNBduUqwbl6zddsVv_TJPGdM/edit?usp=sharing")
     
     # 오늘 일자 및 최근 7일 계산
