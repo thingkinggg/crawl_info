@@ -184,7 +184,8 @@ def main_app():
             </style>
         """, unsafe_allow_html=True)
     
-        st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.\n 포함 키워드 : 특허, 제안, 심의")
+        st.write(f"최근 일주일 내에 df_list 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
+        st.write("포함 키워드 : 특허, 제안, 심의")
     
         search_keyword = st.text_input("df_list 파일에서 검색할 키워드를 입력하세요")
     
