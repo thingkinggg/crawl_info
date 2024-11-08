@@ -24,7 +24,7 @@ def login():
 
 def main_app():
     st.title("🎈 지자체 크롤링")
-    st.write("2024년 11월 07일 21:28 업데이트")
+    st.write("2024년 11월 04일 21:28 업데이트")
     st.write("문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
     # 버튼 클릭 시 Google 스프레드시트로 이동
     st.markdown(
@@ -97,42 +97,16 @@ def main_app():
             
             if not problematic_rows.empty:
                 st.warning(f"선택한 날짜({selected_date})에 덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
-                st.write("확인해야 할 사이트:")
-                # URL 컬럼에 하이퍼링크 추가
-                problematic_rows['URL'] = problematic_rows['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
-                # CSS 스타일을 사용하여 특정 열의 너비를 조정합니다.
-                st.markdown("""
-                    <style>
-                        table {
-                            width: 100%;
-                        }
-                        th, td {
-                            padding: 5px;
-                        }
-                        th {
-                            text-align: left;
-                        }
-                        td {
-                            max-width: 200px;  /* 기본적으로 열의 최대 폭 설정 */
-                            overflow-wrap: break-word;
-                        }
-                        td:nth-child(1), th:nth-child(1) {  /* unique_date 열 (두 번째 열) */
-                            width: 10px;  /* 열의 너비 설정 */
-                        }
-                        td:nth-child(2), th:nth-child(2) {  /* unique_date 열 (두 번째 열) */
-                            width: 20px;  /* 열의 너비 설정 */
-                        }
-                        td:nth-child(4), th:nth-child(4) {  /* unique_date 열 (두 번째 열) */
-                            width: 20px;  /* 열의 너비 설정 */
-                        }
-                        td:nth-child(5), th:nth-child(5) {  /* max_date 열 (세 번째 열) */
-                            width: 20px;  /* 열의 너비 설정 */
-                        }
-                    </style>
-                """, unsafe_allow_html=True)
                 
-                # 데이터프레임을 HTML로 렌더링
-                st.markdown(problematic_rows.to_html(escape=False), unsafe_allow_html=True)
+                # Replace the "URL" column with "확인하기" buttons
+                problematic_rows = problematic_rows.copy()
+                problematic_rows['URL'] = problematic_rows['URL'].apply(
+                    lambda x: f'<a href="{x}" target="_blank"><button>확인하기</button></a>'
+                )
+                
+                # Render the DataFrame as HTML
+                st.markdown(problematic_rows.to_html(escape=False, index=False), unsafe_allow_html=True)
+            
             else:
                 st.success(f"선택한 날짜({selected_date})에는 unique_date가 Null이거나 1인 데이터가 없습니다.")
         else:
@@ -154,48 +128,57 @@ def main_app():
         column_order = ['SITE_NO', '출처', '제목', 'URL', '작성일']
         combined_df_list = combined_df_list.reindex(columns=column_order)
     
-        combined_df_list['URL'] = combined_df_list['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
-    
         combined_df_list['작성일'] = pd.to_datetime(combined_df_list['작성일'], errors='coerce')
         combined_df_list = combined_df_list.sort_values(by='작성일', ascending=False)
-    
-        # "df_list 파일" 테이블에 대한 CSS 스타일을 정의합니다.
+
+                # General CSS styling for the top table
         st.markdown("""
             <style>
-                #df-list-table {
+                table {
                     width: 100%;
+                    border-collapse: collapse;
                 }
-                #df-list-table th, #df-list-table td {
-                    padding: 5px;
+                th {
+                    text-align: center;  /* Center-align the headers */
+                    background-color: #f2f2f2;  /* Light gray background for headers */
+                    padding: 8px;
                 }
-                #df-list-table th {
-                    text-align: left;
+                td {
+                    padding: 8px;
+                    text-align: left;  /* Align text to the left in table cells */
+                    max-width: 200px;  /* Adjust max-width to better fit content */
+                    word-wrap: break-word;  /* Enable word wrap for long text */
                 }
-                #df-list-table td {
-                    max-width: 50px;  /* 열의 최대 폭 설정 */
-                    width: 50px;  /* 열의 너비 설정 */
-                    overflow-wrap: break-word;
-                    word-wrap: break-word;  /* 단어를 잘라서 줄바꿈 */
+                a {
+                    color: #0066cc;  /* Link color */
+                    text-decoration: none;  /* Remove underline from links */
                 }
-                #df-list-table td:nth-child(1), #df-list-table th:nth-child(1) {  /* 첫 번째 열 */
-                    width: 5px;  /* 첫 번째 열의 너비 설정 */
-                    max-width: 5px;  /* 첫 번째 열의 최대 너비 설정 */
-                    overflow: hidden;  /* 내용이 넘칠 경우 숨김 */
+                a:hover {
+                    text-decoration: underline;  /* Underline on hover */
                 }
-                #df-list-table td:nth-child(2), #df-list-table th:nth-child(2) {  /* 두 번째 열 */
-                    width: 10px;  /* 두 번째 열의 너비 설정 */
+                button {
+                    font-size: 12px;
+                    padding: 5px 10px;
                 }
-                #df-list-table td:nth-child(3), #df-list-table th:nth-child(3) {  /* 두 번째 열 */
-                    width: 20px;  /* 두 번째 열의 너비 설정 */
+                .lower-table td:nth-child(1) {
+                    max-width: 50px;  /* Reduce the width of the 2nd column */
+                }                
+                .lower-table td:nth-child(2) {
+                    max-width: 100px;  /* Reduce the width of the 2nd column */
                 }
-                #df-list-table td:nth-child(5), #df-list-table th:nth-child(5) {  /* 두 번째 열 */
-                    width: 10px;  /* 두 번째 열의 너비 설정 */
-                    max-width: 10px;  /* 첫 번째 열의 최대 너비 설정 */
-                    overflow: hidden;  /* 내용이 넘칠 경우 숨김 */
+                .lower-table td:nth-child(3) {
+                    max-width: 300px;  /* Increase the width of the 3rd column */
+                }
+                .lower-table td:nth-child(4) {
+                    max-width: 50px;  /* Increase the width of the 3rd column */
+                }
+                .lower-table td:nth-child(5) {
+                    max-width: 50px;  /* Increase the width of the 3rd column */
                 }
             </style>
         """, unsafe_allow_html=True)
     
+
         st.write(f"최근 15일 내에 수집된 공고 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
         st.write("포함 키워드 : 특허, 제안, 심의, 공법")
 
@@ -217,11 +200,22 @@ def main_app():
         if search_keyword:
             search_results = combined_df_list[combined_df_list['제목'].str.contains(search_keyword, na=False)]
             st.write(f"'{search_keyword}' 검색 결과:")
-            st.markdown(search_results.to_html(escape=False, index=False, table_id="df-list-table"), unsafe_allow_html=True)
+            search_results = search_results.copy()
+            search_results['URL'] = search_results['URL'].apply(
+                lambda x: f'<a href="{x}" target="_blank"><button>확인하기</button></a>'
+            )
+            st.markdown(f'<div class="lower-table">{search_results.to_html(escape=False, index=False)}</div>', unsafe_allow_html=True)
         else:
             st.write("df_list 파일의 전체 데이터:")
-            st.markdown(combined_df_list.to_html(escape=False, index=False, table_id="df-list-table"), unsafe_allow_html=True)
-       
+            # Replace the "URL" column with "확인하기" buttons
+            combined_df_list = combined_df_list.copy()
+            combined_df_list['URL'] = combined_df_list['URL'].apply(
+                lambda x: f'<a href="{x}" target="_blank"><button>확인하기</button></a>'
+            )
+            
+            # Render the DataFrame as HTML
+            st.markdown(f'<div class="lower-table">{combined_df_list.to_html(escape=False, index=False)}</div>', unsafe_allow_html=True)
+      
 
     else:
         st.write("최근 15일 내에 df_list 파일을 찾을 수 없습니다.")
