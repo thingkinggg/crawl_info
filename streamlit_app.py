@@ -9,7 +9,7 @@ import html
 
 st.set_page_config(layout="wide")
 
-PASSWORD = "ycenc1308"
+PASSWORD = "younchang0943312"
 
 def login():
     st.title("🎈 지자체 크롤링 로그인")
