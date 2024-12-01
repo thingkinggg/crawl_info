@@ -26,9 +26,9 @@ def main_app():
     st.title("🎈 지자체 크롤링")
 
     # 왜 일자 업데이트가 되지 않을까?
-    st.write("2024년 12월 02일 00:00 업데이트")
-    
+    st.write(" 2024년 12월 02일 00:00 업데이트 ")
     st.write("문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
+    
     # 버튼 클릭 시 Google 스프레드시트로 이동
     st.markdown(
     """
