@@ -25,7 +25,7 @@ def login():
 def main_app():
     st.title("🎈 지자체 크롤링")
 
-    st.write("2024년 12월 11일 01:42 업데이트")   
+    st.write("  2024년 12월 11일 01:42 업데이트")   
     st.write(" 문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
     
     # 버튼 클릭 시 Google 스프레드시트로 이동
