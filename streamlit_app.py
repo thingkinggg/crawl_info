@@ -23,9 +23,8 @@ def login():
             st.error("비밀번호가 올바르지 않습니다.")
 
 def main_app():
-    
-    st.title("🎈 지자체 크롤링")
-    st.write("2024년 12월 13일 09:35 업데이트")    
+    st.title(" 🎈 지자체 크롤링")
+    st.write(" 2024년 12월 16일 00:20 업데이트")    
     st.write(" 문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
     
     # 버튼 클릭 시 Google 스프레드시트로 이동
