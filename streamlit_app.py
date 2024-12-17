@@ -26,7 +26,6 @@ def main_app():
     
     st.title("🎈 지자체 크롤링")
     st.write("문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
-    st.write("2024년 12월 17일 12:16 업데이트 ")    
     
     
     # 버튼 클릭 시 Google 스프레드시트로 이동
@@ -104,6 +103,7 @@ def main_app():
             
             if not problematic_rows.empty:
                 st.warning(f"선택한 날짜({selected_date})에 덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
+                st.write("전라도 화순군 17일 사이트 접속 불가 18일 재수집예정")
                 
                 # Replace the "URL" column with "확인하기" buttons
                 problematic_rows = problematic_rows.copy()
@@ -149,6 +149,13 @@ def main_app():
         # 컬럼 순서 재정렬
         column_order = ['SITE_NO', '출처', '제목', 'URL', '작성일', '수집일']
         combined_df_list = combined_df_list.reindex(columns=column_order)
+
+        # 최근 업데이트 일시 확인
+        most_recent_date = combined_df_list['수집일'].max()
+        if pd.notnull(most_recent_date):
+            recent_update = most_recent_date.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            recent_update = "N/A"
 
                 # General CSS styling for the top table
         st.markdown("""
@@ -200,6 +207,7 @@ def main_app():
 
         st.write(f"최근 15일 내에 수집된 공고 파일 {len(df_list_file_paths)}개를 불러왔습니다.")
         st.write("포함 키워드 : 특허, 제안, 심의, 공법")
+        st.write(f"📅 **최근 업데이트 일시**: {recent_update}")
 
         # 엑셀 파일 다운로드 버튼 추가
         output = BytesIO()
