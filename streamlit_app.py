@@ -115,7 +115,7 @@ def main_app():
                 st.markdown(problematic_rows.to_html(escape=False, index=False), unsafe_allow_html=True)
             
             else:
-                st.success(f"선택한 날짜({selected_date})에는 unique_date가 Null이거나 1인 데이터가 없습니다.")
+                st.success(f"선택한 날짜({selected_date})에는 모든 데이터를 수집했습니다.")
         else:
             st.write(f"선택한 날짜({selected_date})에 해당하는 df_log 파일을 찾을 수 없습니다.")
     else:
