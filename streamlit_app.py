@@ -68,7 +68,7 @@ def main_app():
             file_date_str = file.split('_')[-1].replace('.xlsx', '')
             try:
                 file_date = datetime.strptime(file_date_str, '%Y%m%d')
-                if one_week_ago <= file_date <= today:
+                if one_week_ago <= file_date :
                     recent_files.append(file)
             except ValueError:
                 continue
