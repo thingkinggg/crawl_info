@@ -151,12 +151,12 @@ def main_app():
         column_order = ['SITE_NO', '출처', '제목', 'URL', '작성일', '수집일']
         combined_df_list = combined_df_list.reindex(columns=column_order)
 
-    # 최근 업데이트 일시 확인
-    most_recent_date = combined_df_list['수집일'].max()
-    if pd.notnull(most_recent_date):
-        recent_update = most_recent_date.strftime('%Y-%m-%d %H:%M:%S')
-    else:
-        recent_update = "N/A"
+        # 최근 업데이트 일시 확인
+        most_recent_date = combined_df_list['수집일'].max()
+        if pd.notnull(most_recent_date):
+            recent_update = most_recent_date.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            recent_update = "N/A"
 
                 # General CSS styling for the top table
         st.markdown("""
