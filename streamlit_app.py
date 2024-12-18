@@ -123,6 +123,8 @@ def main_app():
     
     # df_list 파일 읽기 및 처리
     df_list_file_paths = get_recent_files('df_list')
+    st.write(f"발견된 파일 경로: {df_list_file_paths}") 
+    
     if df_list_file_paths:
         combined_df_list = pd.DataFrame()
         
