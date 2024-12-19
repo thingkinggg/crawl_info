@@ -159,6 +159,8 @@ def main_app():
         else:
             recent_update = "N/A"
 
+        combined_df_list['수집일'] = combined_df_list['수집일'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
                 # General CSS styling for the top table
         st.markdown("""
             <style>
