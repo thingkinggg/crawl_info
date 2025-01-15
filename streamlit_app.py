@@ -103,7 +103,7 @@ def main_app():
             
             if not problematic_rows.empty:
                 st.warning(f"선택한 날짜({selected_date})에 덜 수집된 사이트 리스트는 아래와 같습니다. 직접 접속 후 확인 필요합니다.")
-                st.write("전라도 화순군 17일 사이트 접속 불가 18일 재수집예정")
+                st.write("전라도 강진군 1/15 사이트 접속 불가 16일 재수집예정")
                 
                 # Replace the "URL" column with "확인하기" buttons
                 problematic_rows = problematic_rows.copy()
