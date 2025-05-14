@@ -13,7 +13,7 @@ st.set_page_config(layout="wide")
 PASSWORD = "yc0943312***"
 
 def login():
-    st.title("🎈 지자체 크롤링 로그인")
+    st.title(" 🎈 지자체 크롤링 로그인 ")
     password = st.text_input("비밀번호를 입력하세요", type="password")
     if st.button("로그인"):
         if password == PASSWORD:
