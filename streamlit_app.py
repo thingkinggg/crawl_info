@@ -25,7 +25,7 @@ def login():
 
 def main_app():
     
-    st.title("🎈 지자체 크롤링")
+    st.title("🎈 지자체 정보")
     
     st.write("문의 있으실 경우 deepbid2024@gmail.com 으로 연락부탁드립니다.")
   
